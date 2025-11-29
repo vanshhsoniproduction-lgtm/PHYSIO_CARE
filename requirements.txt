@@ -1,0 +1,12 @@
+Django==5.1.6
+Pillow>=10.0.0
+django-crispy-forms>=2.0
+gunicorn
+whitenoise
+dj-database-url
+gunicorn
+whitenoise
+psycopg2-binary
+python-dotenv>=1.0
+setuptools>=75.0.0
+cloudinary
