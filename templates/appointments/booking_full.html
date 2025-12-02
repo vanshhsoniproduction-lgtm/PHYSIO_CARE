@@ -11,7 +11,7 @@
     </h1>
     <p class="text-gray-500 text-sm">
       Sorry, the slot for
-      <span class="font-bold">{{ slot.time|date:"H:i" }}</span> was just booked
+      <span class="font-bold">{{ slot.time|date:"h:i A" }}</span> was just booked
       by someone else.
     </p>
   </div>
@@ -35,7 +35,7 @@
             >
             <span class="text-gray-300">•</span>
             <span class="font-bold text-secondary"
-              >{{ suggestion.slot.time|date:"H:i" }}</span
+              >{{ suggestion.slot.time|date:"h:i A" }}</span
             >
           </div>
         </div>

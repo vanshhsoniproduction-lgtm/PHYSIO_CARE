@@ -43,16 +43,21 @@ def home(request):
         
     today = timezone.now().date()
     
-    # Today's Meetings
+    # Today's Meetings: 
+    # Show CONFIRMED or PENDING.
+    # EXCLUDE 'COMPLETED' (Marked as read/met) to remove them from the active list.
     today_appointments = Appointment.objects.filter(
-        slot__date=today
-    ).select_related('patient', 'slot').order_by('slot__time')
+        slot__date=today,
+        status__in=['CONFIRMED', 'PENDING'] 
+    ).exclude(status='COMPLETED').select_related('patient', 'slot').order_by('slot__time')
     
-    # Upcoming Meetings
+    # Upcoming Meetings (Tomorrow onwards)
     upcoming_appointments = Appointment.objects.filter(
-        slot__date__gt=today
+        slot__date__gt=today,
+        status__in=['CONFIRMED', 'PENDING']
     ).select_related('patient', 'slot').order_by('slot__date', 'slot__time')
     
+    # Check for repeated patients (UI logic)
     for appt in today_appointments:
         appt.is_repeated = Appointment.objects.filter(
             patient=appt.patient, 
@@ -68,16 +73,20 @@ def home(request):
     # Statistics
     total_patients = Patient.objects.count()
     
+    # Pending Payments: Price set (not null), Payment Pending, Not Free
     pending_payments_count = Appointment.objects.filter(
-        payment_status__in=['PENDING', 'FAILED'],
-        is_free=False
+        payment_status='PENDING',
+        fee__isnull=False,
+        is_free=False,
+        status__in=['CONFIRMED', 'COMPLETED']
     ).count()
     
-    today_revenue_agg = Appointment.objects.filter(
-        payment_status='PAID',
+    # Today's Revenue (Paid)
+    revenue_data = Appointment.objects.filter(
+        payment_status='PAID', 
         updated_at__date=today
-    ).aggregate(total=Sum('fee'))
-    today_revenue = today_revenue_agg['total'] or 0
+    ).aggregate(Sum('fee'))
+    today_revenue = revenue_data['fee__sum'] if revenue_data['fee__sum'] else 0
 
     context = {
         'today_appointments': today_appointments,
@@ -136,10 +145,11 @@ def payments(request):
     # Pending / Failed
     pending = Appointment.objects.filter(
         payment_status__in=['PENDING', 'FAILED'],
+        fee__isnull=False,
         is_free=False
     ).select_related('patient', 'slot').order_by('slot__date')
     
-    # Paid
+    # Paid or Free
     paid = Appointment.objects.filter(
         Q(payment_status='PAID') | Q(is_free=True)
     ).select_related('patient', 'slot').order_by('-updated_at')[:50]
@@ -214,7 +224,7 @@ def doctor_book_appointment(request, patient_id):
         patient = get_object_or_404(Patient, id=patient_id)
         slot_id = request.POST.get('slot_id')
         
-        # Fee logic
+        # Fee logic from Doctor Booking Form
         is_free = request.POST.get('is_free') == 'on'
         fee = request.POST.get('fee')
         
@@ -234,8 +244,11 @@ def doctor_book_appointment(request, patient_id):
                 is_free=is_free
             )
             
+            # If Doctor sets fee now, assign it. Otherwise leave None.
             if not is_free and fee:
                 appt.fee = fee
+            elif is_free:
+                appt.fee = None
             
             appt.save()
             
@@ -248,27 +261,32 @@ def doctor_book_appointment(request, patient_id):
 
 @login_required
 def update_fee(request, appointment_id):
+    """
+    Handles 'Mark as Read / Completed' and assigning fees.
+    """
     if request.method == 'POST':
         appt = get_object_or_404(Appointment, id=appointment_id)
         
-        is_free = request.POST.get('is_free') == 'on'
-        fee = request.POST.get('fee')
-        mark_completed = request.POST.get('mark_completed') == 'true'
-        
-        appt.is_free = is_free
-        if is_free:
-            appt.fee = None
-            appt.payment_status = 'PENDING' # Or PAID? Let's keep pending but UI shows Free
-        elif fee:
-            appt.fee = fee
-            
-        if mark_completed:
+        # Logic for "Mark as Met / Completed"
+        if request.POST.get('mark_completed') == 'true':
             appt.status = 'COMPLETED'
             
-        appt.save()
-        messages.success(request, "Appointment updated successfully.")
-        
-    return redirect('adminpanel:home')
+            is_free = request.POST.get('is_free') == 'on'
+            fee_amount = request.POST.get('fee')
+            
+            if is_free:
+                appt.is_free = True
+                appt.fee = None
+                # Free means payment logic is effectively done
+            elif fee_amount:
+                appt.fee = fee_amount
+                appt.is_free = False
+                # Payment status remains PENDING until patient pays via their portal
+            
+            appt.save()
+            messages.success(request, "Appointment marked as completed and removed from active view.")
+            
+        return redirect('adminpanel:home')
 
 @login_required
 def mark_paid(request, appointment_id):

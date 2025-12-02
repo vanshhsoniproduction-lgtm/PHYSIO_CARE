@@ -2,35 +2,40 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.contrib import messages
+from django.db import transaction
+from django.db.models import F
 from .models import Appointment, DailySlot, Review
-from .utils import generate_slots_for_date, get_slot_suggestions
+from .utils import generate_slots_for_date
 from datetime import datetime, timedelta
 
+# --- DASHBOARD VIEW (Fixes AttributeError) ---
 @login_required
 def home(request):
     patient = request.user.patient
     today = timezone.now().date()
     
-    # Today's Meetings
+    # 1. Today's Meetings (Confirmed, Completed, Pending)
     today_appointments = Appointment.objects.filter(
         patient=patient,
         slot__date=today,
-        status__in=['PENDING', 'CONFIRMED', 'CANCELLED']
+        status__in=['CONFIRMED', 'COMPLETED', 'PENDING']
     ).order_by('slot__time')
     
-    # Upcoming Meetings (Tomorrow onwards)
+    # 2. Upcoming Meetings (Tomorrow onwards)
     upcoming_appointments = Appointment.objects.filter(
         patient=patient,
         slot__date__gt=today,
-        status__in=['PENDING', 'CONFIRMED', 'CANCELLED']
+        status__in=['CONFIRMED', 'PENDING']
     ).order_by('slot__date', 'slot__time')
     
-    # Pending Payments
+    # 3. Pending Payments (Completed sessions with a fee set, not yet paid)
     pending_payments = Appointment.objects.filter(
         patient=patient,
         payment_status='PENDING',
-        status__in=['PENDING', 'CONFIRMED', 'COMPLETED']
-    )
+        fee__isnull=False,
+        is_free=False,
+        status='COMPLETED'
+    ).order_by('-slot__date')
     
     context = {
         'today_appointments': today_appointments,
@@ -40,71 +45,10 @@ def home(request):
     }
     return render(request, 'appointments/home.html', context)
 
-@login_required
-def recent_appointments(request):
-    patient = request.user.patient
-    today = timezone.now().date()
-    
-    # Past appointments (Completed or Date passed)
-    past_appointments = Appointment.objects.filter(
-        patient=patient,
-        slot__date__lt=today
-    ).order_by('-slot__date', '-slot__time')
-    
-    # Completed OR Cancelled from today
-    today_history = Appointment.objects.filter(
-        patient=patient,
-        slot__date=today,
-        status__in=['COMPLETED', 'CANCELLED']
-    )
-    
-    all_past = (past_appointments | today_history).distinct().order_by('-slot__date', '-slot__time')
-    
-    context = {
-        'appointments': all_past,
-        'active_tab': 'recent'
-    }
-    return render(request, 'appointments/recent.html', context)
-
-@login_required
-def profile(request):
-    patient = request.user.patient
-    
-    # Review Logic
-    existing_review = None
-    try:
-        existing_review = patient.review
-    except Review.DoesNotExist:
-        pass
-        
-    if request.method == 'POST':
-        if 'submit_review' in request.POST:
-            if not existing_review:
-                rating = request.POST.get('rating')
-                comment = request.POST.get('comment')
-                Review.objects.create(
-                    patient=patient,
-                    rating=rating,
-                    comment=comment
-                )
-                messages.success(request, "Review submitted successfully!")
-                return redirect('appointments:profile')
-    
-    context = {
-        'patient': patient,
-        'review': existing_review,
-        'active_tab': 'profile'
-    }
-    return render(request, 'appointments/profile.html', context)
+# --- BOOKING VIEWS ---
 
 @login_required
 def booking_date(request):
-    # Check if patient already has ANY appointment
-    if Appointment.objects.filter(patient=request.user.patient).exists():
-        messages.info(request, "You already have a history with us. Please contact the clinic for follow-up appointments.")
-        return redirect('appointments:home')
-
-    # Generate next 7 days
     today = timezone.now().date()
     dates = []
     for i in range(7):
@@ -114,7 +58,6 @@ def booking_date(request):
             'label': d.strftime('%a, %d %b'),
             'is_today': i == 0
         })
-        
     return render(request, 'appointments/booking_date.html', {'dates': dates})
 
 @login_required
@@ -122,61 +65,84 @@ def booking_slots(request):
     date_str = request.GET.get('date')
     if not date_str:
         return redirect('appointments:booking_date')
-        
-    date_obj = datetime.strptime(date_str, '%Y-%m-%d').date()
     
-    # Ensure slots exist
-    slots = generate_slots_for_date(date_obj)
+    try:
+        date_obj = datetime.strptime(date_str, '%Y-%m-%d').date()
+    except ValueError:
+        return redirect('appointments:booking_date')
     
-    # Refresh slots from DB to get latest status
+    generate_slots_for_date(date_obj)
     slots = DailySlot.objects.filter(date=date_obj).order_by('time')
     
-    context = {
-        'date': date_obj,
-        'slots': slots
-    }
-    return render(request, 'appointments/booking_slots.html', context)
-
-from django.db import transaction
-from django.db.models import F
+    return render(request, 'appointments/booking_slots.html', {'date': date_obj, 'slots': slots})
 
 @login_required
 def booking_confirm(request, slot_id):
-    # Double check restriction
-    if Appointment.objects.filter(patient=request.user.patient).exists():
-        messages.error(request, "You cannot book additional appointments online.")
-        return redirect('appointments:home')
-
-    # Use select_for_update to lock the row
-    with transaction.atomic():
-        slot = get_object_or_404(DailySlot.objects.select_for_update(), id=slot_id)
+    slot = get_object_or_404(DailySlot, id=slot_id)
+    
+    if request.method == 'POST':
+        symptoms = request.POST.get('symptoms')
         
-        if request.method == 'POST':
-            # Double booking check
+        with transaction.atomic():
+            # Lock the slot to prevent double booking
+            slot = get_object_or_404(DailySlot.objects.select_for_update(), id=slot_id)
+            
             if slot.is_full:
-                messages.error(request, "This slot was just booked by someone else.")
-                # Get suggestions
-                suggestions = get_slot_suggestions(slot.date, slot.time)
-                return render(request, 'appointments/booking_full.html', {
-                    'slot': slot,
-                    'suggestions': suggestions
-                })
-                
-            # Create Appointment
-            symptoms = request.POST.get('symptoms')
+                messages.error(request, "Slot was just taken.")
+                return redirect('appointments:booking_slots', date=slot.date)
+
+            # Create Appointment (Without Payment)
             Appointment.objects.create(
                 patient=request.user.patient,
                 slot=slot,
                 symptoms=symptoms,
-                status='CONFIRMED', # Auto confirm for now
-                payment_status='PENDING'
+                status='CONFIRMED', 
+                payment_status='PENDING',
+                fee=None, # Fee is set by Doctor later
+                is_free=False
             )
             
-            # Update slot capacity safely
             slot.booked_count = F('booked_count') + 1
             slot.save()
             
-            messages.success(request, "Appointment booked successfully!")
-            return redirect('appointments:home')
-            
+        messages.success(request, "Appointment booked successfully!")
+        return redirect('appointments:home')
+
     return render(request, 'appointments/booking_confirm.html', {'slot': slot})
+
+# --- OTHER VIEWS ---
+
+@login_required
+def recent_appointments(request):
+    patient = request.user.patient
+    history = Appointment.objects.filter(patient=patient).order_by('-slot__date', '-slot__time')
+    
+    context = {
+        'appointments': history,
+        'active_tab': 'recent'
+    }
+    return render(request, 'appointments/recent.html', context)
+
+@login_required
+def profile(request):
+    patient = request.user.patient
+    try:
+        existing_review = patient.review
+    except Review.DoesNotExist:
+        existing_review = None
+        
+    if request.method == 'POST' and 'submit_review' in request.POST:
+        if not existing_review:
+            Review.objects.create(
+                patient=patient,
+                rating=request.POST.get('rating'),
+                comment=request.POST.get('comment')
+            )
+            messages.success(request, "Review submitted successfully!")
+            return redirect('appointments:profile')
+    
+    return render(request, 'appointments/profile.html', {
+        'patient': patient, 
+        'review': existing_review, 
+        'active_tab': 'profile'
+    })
