@@ -1,0 +1,41 @@
+{% extends 'appointments/base_mobile.html' %} {% block content %}
+<div class="p-6">
+  <div class="flex items-center gap-4 mb-6">
+    <a
+      href="{% url 'appointments:home' %}"
+      class="bg-gray-100 p-2 rounded-lg hover:bg-gray-200 transition-colors"
+    >
+      <i data-lucide="arrow-left" class="w-5 h-5 text-gray-600"></i>
+    </a>
+    <h1 class="text-xl font-heading font-bold text-secondary">Select Date</h1>
+  </div>
+
+  <div class="grid gap-3">
+    {% for date in dates %}
+    <a
+      href="{% url 'appointments:booking_slots' %}?date={{ date.value }}"
+      class="block bg-white p-4 rounded-xl border border-gray-100 shadow-sm hover:border-primary hover:shadow-md transition-all group"
+    >
+      <div class="flex justify-between items-center">
+        <div>
+          <span
+            class="block text-lg font-bold text-secondary group-hover:text-primary transition-colors"
+            >{{ date.label }}</span
+          >
+          {% if date.is_today %}
+          <span
+            class="inline-block bg-teal-50 text-teal-700 text-[10px] font-bold px-2 py-0.5 rounded mt-1"
+            >TODAY</span
+          >
+          {% endif %}
+        </div>
+        <i
+          data-lucide="chevron-right"
+          class="w-5 h-5 text-gray-300 group-hover:text-primary"
+        ></i>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

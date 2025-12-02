@@ -1,0 +1,106 @@
+{% extends 'appointments/base_mobile.html' %}
+
+{% block content %}
+<div class="p-6">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h1 class="text-2xl font-heading font-bold text-secondary">Hello, {{ user.patient.full_name|default:user.username }}</h1>
+            <p class="text-gray-500 text-sm">Let's get you moving.</p>
+        </div>
+        <div class="bg-primary/10 p-2 rounded-full">
+            <i data-lucide="bell" class="w-5 h-5 text-primary"></i>
+        </div>
+    </div>
+
+    <!-- Book New CTA -->
+    <a href="{% url 'appointments:booking_date' %}" class="block w-full bg-primary hover:bg-primary-dark text-white p-4 rounded-2xl shadow-lg shadow-teal-500/20 mb-8 flex items-center justify-between group transition-all">
+        <div>
+            <h3 class="font-bold text-lg">Book Appointment</h3>
+            <p class="text-teal-100 text-sm">Find a slot for today or tomorrow</p>
+        </div>
+        <div class="bg-white/20 p-2 rounded-xl group-hover:translate-x-1 transition-transform">
+            <i data-lucide="plus" class="w-6 h-6 text-white"></i>
+        </div>
+    </a>
+
+    <!-- Today's Meetings -->
+    <div class="mb-8">
+        <h2 class="text-lg font-bold mb-4 flex items-center gap-2">
+            <i data-lucide="calendar-check" class="w-5 h-5 text-primary"></i>
+            Today's Sessions
+        </h2>
+        
+        {% if today_appointments %}
+            <div class="space-y-3">
+                {% for appt in today_appointments %}
+                <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <div class="bg-blue-50 text-blue-600 p-3 rounded-xl font-bold text-center min-w-[60px]">
+                            <span class="block text-xs uppercase">Time</span>
+                            <span class="text-lg">{{ appt.slot.time|date:"H:i" }}</span>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-secondary">Physiotherapy Session</h4>
+                            <p class="text-xs {% if appt.status == 'CANCELLED' %}text-red-500 font-bold{% else %}text-gray-500{% endif %}">{{ appt.status }} • {{ appt.payment_status }}</p>
+                        </div>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-5 h-5 text-gray-300"></i>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-8 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+                <p class="text-gray-400 text-sm">No sessions scheduled for today.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Upcoming -->
+    <div class="mb-8">
+        <h2 class="text-lg font-bold mb-4">Upcoming</h2>
+        {% if upcoming_appointments %}
+            <div class="space-y-3">
+                {% for appt in upcoming_appointments %}
+                <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="bg-gray-100 text-gray-600 text-xs font-bold px-2 py-1 rounded">{{ appt.slot.date|date:"M d, Y" }}</span>
+                        <span class="text-primary font-bold text-sm">{{ appt.slot.time|date:"H:i" }}</span>
+                    </div>
+                    <h4 class="font-bold text-secondary">Physiotherapy Session</h4>
+                    {% if appt.status == 'CANCELLED' %}
+                        <span class="text-xs font-bold text-red-500 bg-red-50 px-2 py-1 rounded mt-1 inline-block">CANCELLED</span>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-gray-400 text-sm">No upcoming appointments.</p>
+        {% endif %}
+    </div>
+
+    <!-- Pending Payments -->
+    {% if pending_payments %}
+    <div class="mb-8">
+        <h2 class="text-lg font-bold mb-4 text-orange-600">Pending Payments</h2>
+        <div class="space-y-3">
+            {% for appt in pending_payments %}
+                <!-- Only show if fee is set and not free -->
+                {% if appt.fee and not appt.is_free %}
+                <div class="bg-orange-50 p-4 rounded-xl border border-orange-100 flex justify-between items-center">
+                    <div>
+                        <h4 class="font-bold text-orange-900">Session Fee</h4>
+                        <p class="text-xs text-orange-700">{{ appt.slot.date }} at {{ appt.slot.time }}</p>
+                    </div>
+                    <button class="bg-orange-500 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm">
+                        Pay ₹{{ appt.fee }}
+                    </button>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

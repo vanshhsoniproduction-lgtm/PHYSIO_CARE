@@ -1,0 +1,66 @@
+{% extends 'appointments/base_mobile.html' %}
+
+{% block content %}
+<div class="p-6">
+    <h1 class="text-2xl font-heading font-bold text-secondary mb-6">Recent History</h1>
+
+    {% if appointments %}
+        <div class="space-y-4">
+            {% for appt in appointments %}
+            <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm relative overflow-hidden">
+                <!-- Status Badge -->
+                {% if appt.status == 'COMPLETED' %}
+                    <div class="absolute top-0 right-0 bg-green-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl">COMPLETED</div>
+                {% elif appt.status == 'CANCELLED' %}
+                    <div class="absolute top-0 right-0 bg-red-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl">CANCELLED</div>
+                {% elif appt.status == 'CONFIRMED' %}
+                    <div class="absolute top-0 right-0 bg-blue-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl">CONFIRMED</div>
+                {% else %}
+                     <div class="absolute top-0 right-0 bg-gray-400 text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl">{{ appt.status }}</div>
+                {% endif %}
+
+                <div class="flex gap-4">
+                    <div class="flex flex-col items-center justify-center bg-gray-50 rounded-xl w-16 h-16 border border-gray-200">
+                        <span class="text-xs font-bold text-gray-400 uppercase">{{ appt.slot.date|date:"M" }}</span>
+                        <span class="text-xl font-bold text-secondary">{{ appt.slot.date|date:"d" }}</span>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-secondary text-lg">Physio Session</h3>
+                        <p class="text-sm text-gray-500 mb-1">{{ appt.slot.time|date:"h:i A" }}</p>
+                        
+                        <!-- Payment Status Indicator -->
+                        <div class="mt-2">
+                            {% if appt.status == 'CANCELLED' %}
+                                <span class="text-xs font-bold text-gray-400 bg-gray-50 px-2 py-0.5 rounded">CANCELLED</span>
+                            {% else %}
+                                {% if appt.is_free %}
+                                    <span class="text-xs font-bold text-teal-600 bg-teal-50 px-2 py-0.5 rounded">FREE SESSION</span>
+                                {% elif appt.payment_status == 'PAID' %}
+                                    <span class="text-xs font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded">PAID {% if appt.fee %}• ₹{{ appt.fee }}{% endif %}</span>
+                                {% elif appt.fee %}
+                                    <span class="text-xs font-bold text-red-500 bg-red-50 px-2 py-0.5 rounded">PAYMENT PENDING • ₹{{ appt.fee }}</span>
+                                {% else %}
+                                    <span class="text-xs font-bold text-gray-400 bg-gray-50 px-2 py-0.5 rounded">FEE NOT SET</span>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+
+                        {% if appt.symptoms %}
+                        <p class="text-xs text-gray-400 line-clamp-1 mt-2">"{{ appt.symptoms }}"</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="flex flex-col items-center justify-center h-[60vh] text-center">
+            <div class="bg-gray-100 p-4 rounded-full mb-4">
+                <i data-lucide="history" class="w-8 h-8 text-gray-400"></i>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900">No History Yet</h3>
+            <p class="text-gray-500 text-sm max-w-xs mt-2">Your completed appointments will appear here.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,137 @@
+{% extends 'adminpanel/base_mobile.html' %}
+
+{% block content %}
+<div class="p-6">
+    <!-- Header -->
+    <div class="flex items-center gap-4 mb-6">
+        <a href="{% url 'adminpanel:patients' %}" class="bg-white p-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+            <i data-lucide="arrow-left" class="w-5 h-5 text-gray-600"></i>
+        </a>
+        <h1 class="text-xl font-heading font-bold text-primary">Patient Details</h1>
+    </div>
+
+    <!-- Info Card -->
+    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm mb-8">
+        <div class="flex items-center gap-4 mb-6">
+            <div class="w-16 h-16 bg-accent/10 text-accent rounded-full flex items-center justify-center text-2xl font-bold">
+                {{ patient.full_name|first }}
+            </div>
+            <div>
+                <h2 class="text-lg font-bold text-primary">{{ patient.full_name }}</h2>
+                <p class="text-sm text-gray-500">{{ patient.email }}</p>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-4 text-sm">
+            <div>
+                <span class="block text-xs text-gray-400 uppercase font-bold">Phone</span>
+                <span class="font-medium text-secondary">{{ patient.phone }}</span>
+            </div>
+            <div>
+                <span class="block text-xs text-gray-400 uppercase font-bold">Gender</span>
+                <span class="font-medium text-secondary">{{ patient.get_gender_display }}</span>
+            </div>
+            <div>
+                <span class="block text-xs text-gray-400 uppercase font-bold">DOB</span>
+                <span class="font-medium text-secondary">{{ patient.dob|default:"-" }}</span>
+            </div>
+            <div>
+                <span class="block text-xs text-gray-400 uppercase font-bold">Joined</span>
+                <span class="font-medium text-secondary">{{ patient.created_at|date:"M Y" }}</span>
+            </div>
+        </div>
+        
+        {% if patient.address %}
+        <div class="mt-4 pt-4 border-t border-gray-100">
+            <span class="block text-xs text-gray-400 uppercase font-bold">Address</span>
+            <span class="font-medium text-secondary text-sm">{{ patient.address }}</span>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Schedule New Appointment -->
+    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm mb-8">
+        <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">Schedule Next Appointment</h3>
+        
+        <form action="{% url 'adminpanel:doctor_book' patient.id %}" method="POST">
+            {% csrf_token %}
+            
+            <div class="mb-4">
+                <label class="block text-xs font-bold text-gray-700 mb-2">Select Date</label>
+                <select id="date-select" class="w-full p-3 bg-gray-50 rounded-xl border border-gray-200 text-sm outline-none focus:border-accent" onchange="loadSlots(this.value)">
+                    <option value="">-- Choose Date --</option>
+                    {% for date in dates %}
+                        <option value="{{ date.value }}">{{ date.label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-xs font-bold text-gray-700 mb-2">Select Slot</label>
+                <div id="slot-container" class="grid grid-cols-3 gap-2">
+                    <p class="text-xs text-gray-400 col-span-3">Please select a date first.</p>
+                </div>
+            </div>
+
+            <!-- Fee Section -->
+            <div class="mb-6 pt-4 border-t border-gray-100">
+                <div class="flex items-center gap-2 mb-3">
+                    <input type="checkbox" id="book_is_free" name="is_free" class="w-4 h-4 text-accent rounded border-gray-300 focus:ring-accent" onchange="toggleBookFeeInput()">
+                    <label for="book_is_free" class="text-xs font-bold text-gray-700">Mark as FREE</label>
+                </div>
+                
+                <div id="book_fee_input_container">
+                    <label class="block text-xs font-bold text-gray-700 mb-2">Session Fee (₹)</label>
+                    <input type="number" name="fee" class="w-full p-3 bg-gray-50 rounded-xl border border-gray-200 text-sm outline-none focus:border-accent" placeholder="Enter amount (Optional)">
+                </div>
+            </div>
+            
+            <button type="submit" class="w-full bg-accent hover:bg-sky-600 text-white font-bold py-3 rounded-xl shadow-lg shadow-sky-500/20 transition-all">
+                Confirm Booking
+            </button>
+        </form>
+    </div>
+
+    <!-- History -->
+    <div>
+        <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">Appointment History</h3>
+        {% if appointments %}
+            <div class="space-y-3">
+                {% for appt in appointments %}
+                    {% include 'adminpanel/components/appointment_card.html' with appt=appt %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-gray-400 text-sm">No history available.</p>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    function loadSlots(date) {
+        const container = document.getElementById('slot-container');
+        if (!date) {
+            container.innerHTML = '<p class="text-xs text-gray-400 col-span-3">Please select a date first.</p>';
+            return;
+        }
+        
+        container.innerHTML = '<p class="text-xs text-gray-400 col-span-3">Loading slots...</p>';
+        
+        fetch(`{% url 'adminpanel:get_slots' %}?date=${date}`)
+            .then(response => response.text())
+            .then(html => {
+                container.innerHTML = html;
+            });
+    }
+
+    function toggleBookFeeInput() {
+        const checkbox = document.getElementById('book_is_free');
+        const container = document.getElementById('book_fee_input_container');
+        if (checkbox.checked) {
+            container.classList.add('hidden');
+        } else {
+            container.classList.remove('hidden');
+        }
+    }
+</script>
+{% endblock %}

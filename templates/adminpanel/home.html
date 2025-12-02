@@ -1,0 +1,155 @@
+{% extends 'adminpanel/base_mobile.html' %} 
+
+{% block content %}
+<div class="p-6 pb-24">
+  <!-- Header Section -->
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      <h1 class="text-2xl font-heading font-bold text-primary">
+        Dashboard
+      </h1>
+      <p class="text-xs text-gray-400 font-medium">{{ today_date|date:"l, d F Y" }}</p>
+    </div>
+    <div class="bg-white p-2 rounded-full shadow-sm border border-gray-100">
+      <span class="text-xs font-bold px-3 py-1 bg-primary/10 text-primary rounded-full">
+        Dr. Panel
+      </span>
+    </div>
+  </div>
+
+  <!-- Stats Grid -->
+  <div class="grid grid-cols-2 gap-3 mb-8">
+    <!-- Total Patients -->
+    <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+      <div class="flex items-center gap-2 mb-2">
+        <div class="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+          <i data-lucide="users" class="w-4 h-4"></i>
+        </div>
+        <span class="text-xs font-bold text-gray-400 uppercase">Patients</span>
+      </div>
+      <p class="text-2xl font-bold text-primary">{{ stats.total_patients }}</p>
+    </div>
+
+    <!-- Today's Revenue -->
+    <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+      <div class="flex items-center gap-2 mb-2">
+        <div class="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center text-green-600">
+          <i data-lucide="indian-rupee" class="w-4 h-4"></i>
+        </div>
+        <span class="text-xs font-bold text-gray-400 uppercase">Revenue</span>
+      </div>
+      <p class="text-2xl font-bold text-primary">₹{{ stats.today_revenue }}</p>
+    </div>
+
+    <!-- Pending Payments -->
+    <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm col-span-2">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-full bg-red-50 flex items-center justify-center text-red-600">
+            <i data-lucide="alert-circle" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <span class="text-xs font-bold text-gray-400 uppercase block">Pending Fees</span>
+            <p class="text-lg font-bold text-primary">{{ stats.pending_payments }} <span class="text-xs font-normal text-gray-400">appointments</span></p>
+          </div>
+        </div>
+        <a href="{% url 'adminpanel:payments' %}" class="text-xs font-bold text-red-500 hover:text-red-700">View All &rarr;</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Today's Schedule Section -->
+  <div class="mb-8">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-sm font-bold text-gray-500 uppercase tracking-wider">
+        Today's Schedule
+      </h2>
+      
+      <!-- Filters -->
+      <div class="flex bg-gray-100 p-1 rounded-lg">
+        <button onclick="filterAppointments('all')" class="filter-btn active px-3 py-1 text-[10px] font-bold rounded-md transition-all text-gray-500 hover:text-primary" data-filter="all">All</button>
+        <button onclick="filterAppointments('pending')" class="filter-btn px-3 py-1 text-[10px] font-bold rounded-md transition-all text-gray-500 hover:text-primary" data-filter="pending">Pending</button>
+        <button onclick="filterAppointments('completed')" class="filter-btn px-3 py-1 text-[10px] font-bold rounded-md transition-all text-gray-500 hover:text-primary" data-filter="completed">Done</button>
+      </div>
+    </div>
+
+    {% if today_appointments %}
+      <div class="space-y-3" id="today-appointments-list">
+        {% for appt in today_appointments %} 
+          <div class="appointment-item transition-all duration-300" 
+               data-status="{% if appt.status == 'COMPLETED' %}completed{% else %}pending{% endif %}">
+            {% include 'adminpanel/components/appointment_card.html' with appt=appt %} 
+          </div>
+        {% endfor %}
+      </div>
+      <div id="no-appointments-msg" class="hidden text-center py-8 bg-white rounded-2xl border border-dashed border-gray-200">
+         <p class="text-gray-400 text-sm">No appointments found for this filter.</p>
+      </div>
+    {% else %}
+      <div class="text-center py-8 bg-white rounded-2xl border border-dashed border-gray-200">
+        <p class="text-gray-400 text-sm">No appointments for today.</p>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Upcoming Appointments Section -->
+  <div class="mb-8">
+    <h2 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">
+      Upcoming
+    </h2>
+    
+    {% if upcoming_appointments %}
+      <div class="space-y-3">
+        {% for appt in upcoming_appointments %} 
+          {% include 'adminpanel/components/appointment_card.html' with appt=appt %} 
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-gray-400 text-sm">No upcoming appointments.</p>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .filter-btn.active {
+    background-color: white;
+    color: var(--color-primary); /* Assuming primary color var exists, or use black */
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    color: #0f172a; /* Slate 900 */
+  }
+</style>
+
+<script>
+function filterAppointments(filter) {
+  // Update buttons
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    if(btn.dataset.filter === filter) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+
+  // Filter items
+  const items = document.querySelectorAll('.appointment-item');
+  let visibleCount = 0;
+
+  items.forEach(item => {
+    if (filter === 'all' || item.dataset.status === filter) {
+      item.classList.remove('hidden');
+      visibleCount++;
+    } else {
+      item.classList.add('hidden');
+    }
+  });
+
+  // Show/hide empty message
+  const msg = document.getElementById('no-appointments-msg');
+  if (visibleCount === 0 && items.length > 0) {
+    msg.classList.remove('hidden');
+  } else {
+    msg.classList.add('hidden');
+  }
+}
+</script>
+{% endblock %}

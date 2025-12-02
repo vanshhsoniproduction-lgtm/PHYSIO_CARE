@@ -1,0 +1,48 @@
+{% extends 'adminpanel/base_mobile.html' %} {% block content %}
+<div class="p-6">
+  <h1 class="text-2xl font-heading font-bold text-primary mb-6">Settings</h1>
+
+  <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm mb-6">
+    <div class="flex items-center gap-4 mb-6">
+      <div
+        class="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center text-2xl font-bold"
+      >
+        {{ user.username|first|upper }}
+      </div>
+      <div>
+        <h2 class="text-lg font-bold text-primary">
+          Dr. {{ user.username|title }}
+        </h2>
+        <p class="text-sm text-gray-500">Administrator</p>
+      </div>
+    </div>
+
+    <div class="space-y-4">
+      <div
+        class="flex justify-between items-center py-3 border-b border-gray-50"
+      >
+        <span class="text-sm font-medium text-gray-600">Clinic Hours</span>
+        <span class="text-sm font-bold text-primary">06:00 AM - 10:00 PM</span>
+      </div>
+      <div
+        class="flex justify-between items-center py-3 border-b border-gray-50"
+      >
+        <span class="text-sm font-medium text-gray-600">Slot Duration</span>
+        <span class="text-sm font-bold text-primary">1 Hour</span>
+      </div>
+    </div>
+  </div>
+
+  <a
+    href="{% url 'adminpanel:logout' %}"
+    class="block w-full bg-red-50 text-red-600 font-bold py-4 rounded-xl text-center hover:bg-red-100 transition-colors"
+  >
+    Sign Out
+  </a>
+
+  <p class="text-center text-[10px] text-gray-400 mt-8">
+    PhysioCare Admin v1.0<br />
+    &copy; 2024
+  </p>
+</div>
+{% endblock %}

@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhysioCare Premium Access</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#0d9488", /* Premium Teal */
+                        "primary-dark": "#0f766e",
+                        "primary-light": "#ccfbf1",
+                        secondary: "#0f172a", /* Slate 900 */
+                        "bg-light": "#f8fafc",
+                        "bg-dark": "#020617",
+                    },
+                    fontFamily: {
+                        sans: ["Inter", "sans-serif"],
+                        heading: ["Plus Jakarta Sans", "sans-serif"],
+                    },
+                    boxShadow: {
+                        'soft': '0 20px 40px -15px rgba(0, 0, 0, 0.05)',
+                        'glow': '0 0 20px rgba(13, 148, 136, 0.3)',
+                        'inner-light': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                        'slide-up': 'slideUp 0.4s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                },
+            },
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar for the form area */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Smooth transition for form switching */
+        .form-container {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Glassmorphism subtle effect */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body class="bg-bg-light font-sans text-secondary antialiased overflow-hidden">
+
+    <div class="min-h-screen flex w-full relative">
+        
+        <!-- Left Side: Branding & Aesthetics (Hidden on mobile, 50% on desktop) -->
+        <div class="hidden lg:flex lg:w-1/2 bg-secondary relative overflow-hidden items-center justify-center">
+            <!-- Background pattern/image overlay -->
+            <div class="absolute inset-0 bg-gradient-to-br from-secondary via-[#112336] to-primary opacity-90 z-10"></div>
+            <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Physio Background" class="absolute inset-0 w-full h-full object-cover opacity-40">
+            
+            <div class="relative z-20 text-white max-w-lg px-12 animate-slide-up">
+                <div class="mb-6 flex items-center gap-3">
+                    <div class="bg-primary p-2.5 rounded-xl shadow-glow">
+                        <i data-lucide="activity" class="w-8 h-8 text-white"></i>
+                    </div>
+                    <h1 class="text-3xl font-heading font-bold tracking-tight">PhysioCare</h1>
+                </div>
+                <h2 class="text-5xl font-heading font-bold leading-tight mb-6">Recover stronger.<br>Move better.</h2>
+                <p class="text-gray-300 text-lg leading-relaxed mb-8">
+                    Join our premium physiotherapy network. Manage appointments, track your recovery progress, and access personalized care plans.
+                </p>
+                
+                <div class="flex gap-4">
+                    <div class="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-3 rounded-lg border border-white/10">
+                        <i data-lucide="shield-check" class="text-primary-light"></i>
+                        <span class="font-medium">Verified Specialists</span>
+                    </div>
+                    <div class="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-3 rounded-lg border border-white/10">
+                        <i data-lucide="clock" class="text-primary-light"></i>
+                        <span class="font-medium">24/7 Support</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Decorative Circles -->
+            <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-primary rounded-full blur-[100px] opacity-40 z-10"></div>
+            <div class="absolute top-0 right-0 w-96 h-96 bg-blue-600 rounded-full blur-[120px] opacity-20 z-10"></div>
+        </div>
+
+        <!-- Right Side: Interaction Area -->
+        <div class="w-full lg:w-1/2 flex flex-col items-center justify-center p-6 lg:p-12 relative overflow-y-auto custom-scrollbar h-screen">
+            
+            <!-- Mobile Header Logo -->
+            <div class="lg:hidden mb-8 flex items-center gap-2">
+                <div class="bg-primary p-2 rounded-lg">
+                    <i data-lucide="activity" class="w-6 h-6 text-white"></i>
+                </div>
+                <span class="text-2xl font-heading font-bold text-secondary">PhysioCare</span>
+            </div>
+
+            <!-- Auth Container -->
+            <div class="w-full max-w-md bg-white rounded-3xl shadow-soft border border-gray-100 p-8 transition-all duration-300 relative">
+                
+                <!-- Toggle Switcher -->
+                <div class="flex bg-gray-100 p-1 rounded-xl mb-8 relative">
+                    <div id="toggle-bg" class="absolute left-1 top-1 bottom-1 w-[calc(50%-4px)] bg-white rounded-lg shadow-sm transition-all duration-300 ease-out z-0"></div>
+                    <button onclick="switchMode('login')" id="btn-login" class="flex-1 py-2.5 text-sm font-semibold rounded-lg z-10 transition-colors text-primary relative flex items-center justify-center gap-2">
+                        <span>Log In</span>
+                    </button>
+                    <button onclick="switchMode('signup')" id="btn-signup" class="flex-1 py-2.5 text-sm font-semibold rounded-lg z-10 transition-colors text-gray-500 relative flex items-center justify-center gap-2">
+                        <span>New Patient</span>
+                    </button>
+                </div>
+
+                <!-- LOGIN FORM -->
+                <form id="login-form" method="POST" class="space-y-6 animate-fade-in {% if active_tab == 'signup' %}hidden{% endif %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_type" value="login">
+                    
+                    <div class="text-center mb-6">
+                        <h3 class="text-2xl font-heading font-bold text-secondary">Welcome Back</h3>
+                        <p class="text-gray-500 text-sm mt-1">Enter your details to access your dashboard.</p>
+                        {% if login_form.errors %}
+                            <div class="text-red-500 text-sm mt-2">
+                                {% for field, errors in login_form.errors.items %}
+                                    {{ errors.0 }}
+                                {% endfor %}
+                                {% if login_form.non_field_errors %}
+                                    {{ login_form.non_field_errors.0 }}
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2">Email or Phone</label>
+                            <div class="relative group">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 group-focus-within:text-primary transition-colors">
+                                    <i data-lucide="user" class="w-5 h-5"></i>
+                                </span>
+                                <input type="text" name="username" placeholder="john@example.com" value="{{ login_form.username.value|default:'' }}" class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all font-medium text-gray-700">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wide">Password</label>
+                                <a href="#" class="text-xs text-primary font-medium hover:underline">Forgot?</a>
+                            </div>
+                            <div class="relative group">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 group-focus-within:text-primary transition-colors">
+                                    <i data-lucide="lock" class="w-5 h-5"></i>
+                                </span>
+                                <input type="password" name="password" placeholder="••••••••" class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all font-medium text-gray-700">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full py-3.5 bg-primary hover:bg-primary-dark text-white font-bold rounded-xl shadow-lg shadow-teal-500/30 transition-all transform hover:-translate-y-0.5 active:scale-95 flex items-center justify-center gap-2 group">
+                        <span>Sign In</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                    
+                    <div class="text-center text-sm text-gray-500">
+                        Protected by reCAPTCHA and subject to the Privacy Policy.
+                    </div>
+                </form>
+
+                <!-- SIGNUP FORM (Multi-step) -->
+                <form id="signup-form" method="POST" class="space-y-6 {% if active_tab == 'login' %}hidden{% endif %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_type" value="signup">
+                    
+                    {% if signup_form.errors %}
+                        <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-sm mb-4">
+                            <p class="font-bold">Please correct the errors:</p>
+                            <ul class="list-disc list-inside">
+                                {% for field, errors in signup_form.errors.items %}
+                                    <li>{{ field|title }}: {{ errors.0 }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    <!-- Progress Bar -->
+                    <div class="mb-6">
+                        <div class="flex justify-between mb-2">
+                            <span class="text-xs font-semibold text-primary uppercase tracking-wider" id="step-label">Account Info</span>
+                            <span class="text-xs font-bold text-gray-900"><span id="current-step">1</span>/3</span>
+                        </div>
+                        <div class="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
+                            <div id="progress-bar" class="h-full bg-primary transition-all duration-500 ease-out" style="width: 33%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Step 1: Account Credentials -->
+                    <div id="step-1" class="step-content space-y-4 animate-fade-in">
+                        <h3 class="text-xl font-heading font-bold text-secondary mb-1">Create Account</h3>
+                        <p class="text-sm text-gray-500 mb-4">Let's start with your login details.</p>
+
+                        <div class="grid gap-4">
+                            <!-- Email -->
+                            <div class="relative">
+                                <input type="email" name="email" id="su_email" value="{{ signup_form.email.value|default:'' }}" class="peer w-full pl-4 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all placeholder-transparent" placeholder="Email">
+                                <label class="absolute left-4 -top-2.5 bg-white px-1 text-xs text-primary font-medium transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base peer-placeholder-shown:bg-transparent peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-primary peer-focus:bg-white">Email Address</label>
+                            </div>
+                            <!-- Phone -->
+                            <div class="relative">
+                                <input type="tel" name="phone" id="su_phone" value="{{ signup_form.phone.value|default:'' }}" class="peer w-full pl-4 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all placeholder-transparent" placeholder="Phone">
+                                <label class="absolute left-4 -top-2.5 bg-white px-1 text-xs text-primary font-medium transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base peer-placeholder-shown:bg-transparent peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-primary peer-focus:bg-white">Phone Number</label>
+                            </div>
+                            <!-- Password -->
+                            <div class="relative">
+                                <input type="password" name="password" id="su_pass" class="peer w-full pl-4 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all placeholder-transparent" placeholder="Password">
+                                <label class="absolute left-4 -top-2.5 bg-white px-1 text-xs text-primary font-medium transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base peer-placeholder-shown:bg-transparent peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-primary peer-focus:bg-white">Create Password</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Personal Details (Patient Model) -->
+                    <div id="step-2" class="step-content hidden space-y-4 animate-fade-in">
+                        <h3 class="text-xl font-heading font-bold text-secondary mb-1">Personal Details</h3>
+                        <p class="text-sm text-gray-500 mb-4">Tell us a bit about yourself.</p>
+
+                        <!-- Full Name -->
+                        <div class="relative">
+                            <input type="text" name="full_name" id="su_name" value="{{ signup_form.full_name.value|default:'' }}" class="peer w-full pl-4 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all placeholder-transparent" placeholder="Full Name">
+                            <label class="absolute left-4 -top-2.5 bg-white px-1 text-xs text-primary font-medium transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base peer-placeholder-shown:bg-transparent peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-primary peer-focus:bg-white">Full Name</label>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <!-- DOB -->
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">Date of Birth</label>
+                                <input type="date" name="dob" id="su_dob" value="{{ signup_form.dob.value|default:'' }}" class="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-primary outline-none text-sm">
+                            </div>
+                            <!-- Gender -->
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">Gender</label>
+                                <select name="gender" id="su_gender" class="w-full px-3 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-primary outline-none text-sm appearance-none">
+                                    <option value="" disabled {% if not signup_form.gender.value %}selected{% endif %}>Select</option>
+                                    <option value="M" {% if signup_form.gender.value == 'M' %}selected{% endif %}>Male</option>
+                                    <option value="F" {% if signup_form.gender.value == 'F' %}selected{% endif %}>Female</option>
+                                    <option value="O" {% if signup_form.gender.value == 'O' %}selected{% endif %}>Other</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Location -->
+                    <div id="step-3" class="step-content hidden space-y-4 animate-fade-in">
+                        <h3 class="text-xl font-heading font-bold text-secondary mb-1">Location Info</h3>
+                        <p class="text-sm text-gray-500 mb-4">Where can we reach you?</p>
+
+                        <!-- Country -->
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                                <i data-lucide="globe" class="w-5 h-5"></i>
+                            </div>
+                            <select name="country" id="su_country" class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-primary outline-none appearance-none text-gray-700">
+                                <option value="" disabled {% if not signup_form.country.value %}selected{% endif %}>Select Country</option>
+                                <option value="USA" {% if signup_form.country.value == 'USA' %}selected{% endif %}>United States</option>
+                                <option value="UK" {% if signup_form.country.value == 'UK' %}selected{% endif %}>United Kingdom</option>
+                                <option value="CA" {% if signup_form.country.value == 'CA' %}selected{% endif %}>Canada</option>
+                                <option value="IN" {% if signup_form.country.value == 'IN' %}selected{% endif %}>India</option>
+                                <option value="AU" {% if signup_form.country.value == 'AU' %}selected{% endif %}>Australia</option>
+                            </select>
+                        </div>
+
+                        <!-- Address -->
+                        <div class="relative">
+                            <textarea name="address" id="su_address" rows="3" class="peer w-full pl-4 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all placeholder-transparent resize-none" placeholder="Address">{{ signup_form.address.value|default:'' }}</textarea>
+                            <label class="absolute left-4 -top-2.5 bg-white px-1 text-xs text-primary font-medium transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base peer-placeholder-shown:bg-transparent peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-primary peer-focus:bg-white">Full Address</label>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Buttons -->
+                    <div class="flex gap-3 pt-2">
+                        <button type="button" id="prevBtn" onclick="nextPrev(-1)" class="hidden w-1/3 py-3 bg-white border border-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-colors">
+                            Back
+                        </button>
+                        <button type="button" id="nextBtn" onclick="nextPrev(1)" class="w-full py-3 bg-primary hover:bg-primary-dark text-white font-bold rounded-xl shadow-lg shadow-teal-500/30 transition-all active:scale-95">
+                            Continue
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- Footer for Mobile -->
+            <p class="lg:hidden mt-8 text-xs text-gray-400 text-center">
+                © 2023 PhysioCare Center. All rights reserved.
+            </p>
+        </div>
+    </div>
+
+    <!-- Logic Script -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // DOM Elements
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+        const btnLogin = document.getElementById('btn-login');
+        const btnSignup = document.getElementById('btn-signup');
+        const toggleBg = document.getElementById('toggle-bg');
+
+        // Signup Logic Variables
+        let currentTab = 0;
+        const steps = document.querySelectorAll('.step-content');
+        const labels = ["Account Info", "Personal Details", "Location Info"];
+
+        function switchMode(mode) {
+            if (mode === 'login') {
+                // UI Toggle
+                toggleBg.style.left = '4px';
+                toggleBg.style.width = 'calc(50% - 4px)';
+                
+                // Text Colors
+                btnLogin.classList.add('text-primary');
+                btnLogin.classList.remove('text-gray-500');
+                btnSignup.classList.add('text-gray-500');
+                btnSignup.classList.remove('text-primary');
+
+                // Form Visibility
+                loginForm.classList.remove('hidden');
+                loginForm.classList.add('animate-fade-in');
+                signupForm.classList.add('hidden');
+                
+            } else {
+                // UI Toggle
+                toggleBg.style.left = '50%';
+                
+                // Text Colors
+                btnSignup.classList.add('text-primary');
+                btnSignup.classList.remove('text-gray-500');
+                btnLogin.classList.add('text-gray-500');
+                btnLogin.classList.remove('text-primary');
+
+                // Form Visibility
+                loginForm.classList.add('hidden');
+                signupForm.classList.remove('hidden');
+                signupForm.classList.add('animate-fade-in');
+                
+                // Reset to step 1 if opening for first time
+                showStep(currentTab);
+            }
+        }
+
+        // --- Multi-step Logic ---
+
+        function showStep(n) {
+            // Hide all steps
+            steps.forEach(step => {
+                step.classList.add('hidden');
+                step.classList.remove('block');
+            });
+            
+            // Show current step
+            steps[n].classList.remove('hidden');
+            steps[n].classList.add('block');
+
+            // Update Buttons
+            const prevBtn = document.getElementById("prevBtn");
+            const nextBtn = document.getElementById("nextBtn");
+
+            if (n == 0) {
+                prevBtn.classList.add("hidden");
+                nextBtn.classList.remove("w-2/3");
+                nextBtn.classList.add("w-full");
+            } else {
+                prevBtn.classList.remove("hidden");
+                nextBtn.classList.remove("w-full");
+                nextBtn.classList.add("w-2/3");
+            }
+
+            if (n == (steps.length - 1)) {
+                nextBtn.innerHTML = "Create Account";
+                // Optional: Change style for submit button
+                nextBtn.classList.add('bg-secondary');
+                nextBtn.classList.remove('bg-primary');
+            } else {
+                nextBtn.innerHTML = "Continue";
+                nextBtn.classList.add('bg-primary');
+                nextBtn.classList.remove('bg-secondary');
+            }
+
+            // Update Progress UI
+            updateProgress(n);
+        }
+
+        function updateProgress(n) {
+            // Update Label
+            document.getElementById("step-label").innerText = labels[n];
+            document.getElementById("current-step").innerText = n + 1;
+            
+            // Update Bar Width
+            // Step 1: 33%, Step 2: 66%, Step 3: 100%
+            let width = ((n + 1) / steps.length) * 100;
+            document.getElementById("progress-bar").style.width = width + "%";
+        }
+
+        function nextPrev(n) {
+            // Validation logic could go here
+            if (n == 1 && !validateForm()) return false;
+
+            // Hide current step animation reset
+            steps[currentTab].classList.remove('animate-fade-in');
+
+            // Increase or decrease current tab
+            currentTab = currentTab + n;
+
+            // If you have reached the end of the form...
+            if (currentTab >= steps.length) {
+                // ... the form gets submitted:
+                document.getElementById("signup-form").submit();
+                return false;
+            }
+            
+            showStep(currentTab);
+        }
+
+        function validateForm() {
+            // Simple validation: Check if visible inputs are empty
+            let valid = true;
+            const currentStepDiv = steps[currentTab];
+            const inputs = currentStepDiv.querySelectorAll("input, select, textarea");
+
+            inputs.forEach(input => {
+                if (input.value == "") {
+                    input.className += " border-red-500 bg-red-50";
+                    valid = false;
+                    
+                    // Remove error style on focus
+                    input.addEventListener('input', function() {
+                        this.classList.remove('border-red-500', 'bg-red-50');
+                    });
+                }
+            });
+
+            if(!valid) {
+                 // Shake animation logic could go here
+            }
+            return valid;
+        }
+
+        // Initialize based on active_tab from Django
+        window.addEventListener('DOMContentLoaded', () => {
+            const activeTab = "{{ active_tab }}";
+            switchMode(activeTab);
+        });
+    </script>
+</body>
+</html>

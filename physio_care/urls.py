@@ -21,4 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('core.urls')),
     path('custom-admin/', include('adminpanel.urls')), # New entry
+    path('accounts/', include('accounts.urls')),
+    path('appointments/', include('appointments.urls')),
 ]

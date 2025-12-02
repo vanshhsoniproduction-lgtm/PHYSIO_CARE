@@ -1,0 +1,125 @@
+{% extends 'appointments/base_mobile.html' %} {% block content %}
+<div class="p-6">
+  <h1 class="text-2xl font-heading font-bold text-secondary mb-6">
+    My Profile
+  </h1>
+
+  <!-- User Card -->
+  <div
+    class="bg-white p-6 rounded-3xl border border-gray-100 shadow-soft mb-8 text-center relative overflow-hidden"
+  >
+    <div
+      class="absolute top-0 left-0 w-full h-24 bg-gradient-to-r from-primary to-teal-600 opacity-10"
+    ></div>
+
+    <div class="relative z-10">
+      <div
+        class="w-24 h-24 bg-teal-100 rounded-full mx-auto mb-4 flex items-center justify-center text-3xl font-bold text-primary border-4 border-white shadow-sm"
+      >
+        {{ patient.full_name|first }}
+      </div>
+      <h2 class="text-xl font-bold text-secondary">{{ patient.full_name }}</h2>
+      <p class="text-gray-500 text-sm mb-4">{{ patient.email }}</p>
+
+      <div class="grid grid-cols-2 gap-4 text-left bg-gray-50 p-4 rounded-xl">
+        <div>
+          <span class="block text-xs text-gray-400 uppercase font-bold"
+            >Phone</span
+          >
+          <span class="text-sm font-medium">{{ patient.phone }}</span>
+        </div>
+        <div>
+          <span class="block text-xs text-gray-400 uppercase font-bold"
+            >DOB</span
+          >
+          <span class="text-sm font-medium">{{ patient.dob|default:"-" }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6 pt-6 border-t border-gray-100">
+      <a
+        href="{% url 'accounts:logout' %}"
+        class="text-red-500 font-bold text-sm hover:underline"
+        >Sign Out</a
+      >
+    </div>
+  </div>
+
+  <!-- Review Section -->
+  <div class="mb-8">
+    <h3 class="text-lg font-bold mb-4">Your Feedback</h3>
+
+    {% if review %}
+    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+      <div class="flex items-center gap-1 mb-2">
+        {% for i in "12345" %}
+        <i
+          data-lucide="star"
+          class="w-4 h-4 {% if forloop.counter <= review.rating %}text-yellow-400 fill-yellow-400{% else %}text-gray-300{% endif %}"
+        ></i>
+        {% endfor %}
+      </div>
+      <p class="text-gray-600 italic">"{{ review.comment }}"</p>
+      <p class="text-xs text-gray-400 mt-2 text-right">
+        Submitted on {{ review.created_at|date:"M d, Y" }}
+      </p>
+    </div>
+    {% else %}
+    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+      <p class="text-sm text-gray-500 mb-4">
+        How was your experience with us? You can only submit one review.
+      </p>
+
+      <form method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="submit_review" value="true" />
+
+        <div class="mb-4">
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-2"
+            >Rating</label
+          >
+          <div class="flex gap-4 justify-center">
+            {% for i in "12345" %}
+            <label class="cursor-pointer">
+              <input
+                type="radio"
+                name="rating"
+                value="{{ forloop.counter }}"
+                class="peer sr-only"
+                required
+              />
+              <i
+                data-lucide="star"
+                class="w-8 h-8 text-gray-300 peer-checked:text-yellow-400 peer-checked:fill-yellow-400 transition-colors"
+              ></i>
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-2"
+            >Comment</label
+          >
+          <textarea
+            name="comment"
+            rows="3"
+            class="w-full p-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-primary outline-none text-sm"
+            placeholder="Write your review..."
+            required
+          ></textarea>
+        </div>
+
+        <button
+          type="submit"
+          class="w-full bg-primary text-white font-bold py-3 rounded-xl shadow-lg shadow-teal-500/20"
+        >
+          Submit Review
+        </button>
+      </form>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
