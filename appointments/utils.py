@@ -8,10 +8,11 @@ def generate_slots_for_date(date):
     templates = SlotTemplate.objects.filter(is_active=True)
     created_slots = []
     for template in templates:
+        # FIX: Removed 'price' from defaults as it is no longer in DailySlot model
         slot, created = DailySlot.objects.get_or_create(
             date=date,
             time=template.time,
-            defaults={'capacity': 1, 'price': 500.00}
+            defaults={'capacity': 1} 
         )
         if created:
             created_slots.append(slot)
