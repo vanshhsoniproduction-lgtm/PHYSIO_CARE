@@ -9,8 +9,18 @@ from .utils import generate_slots_for_date
 from datetime import datetime, timedelta
 
 # --- DASHBOARD VIEW (Fixes AttributeError) ---
+# physio_care/appointments/views.py
+
 @login_required
 def home(request):
+    # --- FIX START: Handle users without a Patient profile (e.g., Admins) ---
+    if not hasattr(request.user, 'patient'):
+        if request.user.is_staff:
+            return redirect('adminpanel:home')
+        # If not staff and no patient profile, force re-login/signup
+        return redirect('accounts:auth')
+    # --- FIX END ---
+
     patient = request.user.patient
     today = timezone.now().date()
     
@@ -44,7 +54,6 @@ def home(request):
         'active_tab': 'home'
     }
     return render(request, 'appointments/home.html', context)
-
 # --- BOOKING VIEWS ---
 
 @login_required
