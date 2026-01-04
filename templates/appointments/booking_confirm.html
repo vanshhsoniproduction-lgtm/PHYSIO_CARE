@@ -1,10 +1,10 @@
 {% extends 'appointments/base_mobile.html' %}
 {% block content %}
-<div class="p-6 h-[80vh] flex flex-col justify-center">
+<div class="p-6 h-[80vh] flex flex-col justify-center relative">
     <h1 class="text-2xl font-bold text-secondary mb-2 text-center">Confirm Booking</h1>
     <p class="text-gray-500 text-center text-sm mb-8">No payment required now.</p>
 
-    <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-xl mb-8">
+    <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-xl mb-6">
         <div class="flex justify-between items-center mb-4 pb-4 border-b border-gray-50">
             <span class="text-gray-400 text-sm">Date</span>
             <span class="font-bold text-secondary">{{ slot.date|date:"D, M d" }}</span>
@@ -12,6 +12,21 @@
         <div class="flex justify-between items-center">
             <span class="text-gray-400 text-sm">Time</span>
             <span class="font-bold text-primary text-lg">{{ slot.time|date:"h:i A" }}</span>
+        </div>
+    </div>
+
+    <div class="mb-6">
+        <button type="button" onclick="openUploadModal()" class="w-full bg-white border border-dashed border-primary/50 text-primary p-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-teal-50 transition-colors">
+            <i data-lucide="paperclip" class="w-4 h-4"></i>
+            Add / View Files
+        </button>
+        <div id="preview-list" class="mt-3 flex flex-wrap gap-2">
+            {% for file in uploaded_files %}
+            <div id="file-card-{{ file.id }}" class="bg-gray-100 px-3 py-1 rounded-lg text-xs font-bold text-gray-600 flex items-center gap-1">
+                <i data-lucide="{% if file.file_type == 'image' %}image{% elif file.file_type == 'video' %}play-circle{% else %}file-text{% endif %}" class="w-3 h-3"></i> 
+                {{ file.title }}
+            </div>
+            {% endfor %}
         </div>
     </div>
 
@@ -31,4 +46,217 @@
         <a href="{% url 'appointments:booking_slots' %}?date={{ slot.date|date:'Y-m-d' }}" class="text-gray-400 text-sm hover:text-secondary">Cancel</a>
     </div>
 </div>
+
+<div id="modal-select" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl animate-up">
+        <h3 class="text-lg font-bold text-secondary mb-6 text-center">Manage Files</h3>
+        
+        <div id="modal-file-list" class="mb-6 space-y-2 max-h-40 overflow-y-auto">
+            {% if not uploaded_files %}
+            <p id="no-files-msg" class="text-center text-gray-400 text-sm">No files added yet.</p>
+            {% else %}
+                {% for file in uploaded_files %}
+                <div class="bg-gray-50 p-3 rounded-xl text-sm border border-gray-100 flex justify-between items-center">
+                    <div class="flex items-center gap-2">
+                         <i data-lucide="{% if file.file_type == 'image' %}image{% elif file.file_type == 'video' %}play-circle{% else %}file-text{% endif %}" class="w-4 h-4 text-primary"></i>
+                         <span class="font-bold text-secondary truncate w-32">{{ file.title }}</span>
+                    </div>
+                    <button type="button" class="text-red-400 hover:text-red-600" onclick="deleteFile('{{ file.id }}', this)"><i data-lucide="x" class="w-4 h-4"></i></button>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <button onclick="openInputModal()" class="w-full bg-gray-100 hover:bg-gray-200 text-secondary font-bold py-3 rounded-xl mb-3 flex items-center justify-center gap-2">
+            <i data-lucide="plus" class="w-4 h-4"></i> Add File
+        </button>
+        
+        <button onclick="closeModals()" class="w-full bg-primary text-white font-bold py-3 rounded-xl shadow-lg shadow-teal-900/20">
+            Done
+        </button>
+    </div>
+</div>
+
+<div id="modal-input" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl animate-up">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-bold text-secondary">Upload File</h3>
+            <button onclick="closeInputModal()" class="text-gray-400"><i data-lucide="x" class="w-5 h-5"></i></button>
+        </div>
+        
+        <div class="space-y-4">
+            <div>
+                <label class="block text-xs font-bold text-gray-700 mb-1">File Name</label>
+                <input type="text" id="file-title" class="w-full p-3 bg-gray-50 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary" placeholder="e.g. MRI Scan">
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-gray-700 mb-1">Select File</label>
+                <input type="file" id="file-upload" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20">
+            </div>
+            <div id="upload-error" class="text-red-500 text-xs font-bold hidden"></div>
+            
+            <button onclick="startUpload()" class="w-full bg-primary text-white font-bold py-3 rounded-xl shadow-lg mt-2">
+                Start Upload
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="loader" class="fixed inset-0 bg-white/80 backdrop-blur-md z-[70] hidden flex flex-col items-center justify-center">
+    <div class="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
+    <p class="text-primary font-bold animate-pulse">Processing...</p>
+</div>
+
+<script>
+    const slotId = "{{ slot.id }}";
+    const csrfToken = "{{ csrf_token }}";
+
+    function openUploadModal() {
+        document.getElementById('modal-select').classList.remove('hidden');
+    }
+
+    function closeModals() {
+        document.getElementById('modal-select').classList.add('hidden');
+        document.getElementById('modal-input').classList.add('hidden');
+    }
+
+    function openInputModal() {
+        document.getElementById('modal-select').classList.add('hidden');
+        document.getElementById('modal-input').classList.remove('hidden');
+    }
+
+    function closeInputModal() {
+        document.getElementById('modal-input').classList.add('hidden');
+        document.getElementById('modal-select').classList.remove('hidden');
+    }
+
+// Replace the existing startUpload function with this robust version:
+
+function startUpload() {
+    const titleInput = document.getElementById('file-title');
+    const fileInput = document.getElementById('file-upload');
+    const errorDiv = document.getElementById('upload-error');
+    
+    const title = titleInput.value;
+    const file = fileInput.files[0];
+
+    // Reset error
+    errorDiv.classList.add('hidden');
+
+    if (!title || !file) {
+        errorDiv.textContent = "Please fill all fields";
+        errorDiv.classList.remove('hidden');
+        return;
+    }
+
+    // Size Validation
+    const sizeMb = file.size / (1024 * 1024);
+    const isVideo = file.type.startsWith('video/');
+    const limit = isVideo ? 90 : 9; // 90MB for video, 9MB for others
+
+    if (sizeMb > limit) {
+        errorDiv.textContent = `File too large (Max ${limit}MB)`;
+        errorDiv.classList.remove('hidden');
+        return;
+    }
+
+    // UI Updates
+    const loader = document.getElementById('loader');
+    const loaderText = loader.querySelector('p');
+    loader.classList.remove('hidden');
+    loaderText.textContent = isVideo ? "Uploading Video (This may take time)..." : "Uploading...";
+    
+    document.getElementById('modal-input').classList.add('hidden');
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('title', title);
+    formData.append('slot_id', slotId);
+    formData.append('csrfmiddlewaretoken', csrfToken);
+
+    // Increase timeout handling by using standard fetch
+    fetch("{% url 'patient_files:upload' %}", {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(data => { throw new Error(data.error || 'Upload failed'); });
+        }
+        return response.json();
+    })
+    .then(data => {
+        loader.classList.add('hidden');
+        if (data.error) {
+            throw new Error(data.error);
+        } else {
+            // SUCCESS
+            handleUploadSuccess(data);
+            titleInput.value = '';
+            fileInput.value = '';
+            openUploadModal(); // Show list again
+        }
+    })
+    .catch(err => {
+        loader.classList.add('hidden');
+        errorDiv.textContent = err.message || "Upload failed. Check your connection.";
+        errorDiv.classList.remove('hidden');
+        document.getElementById('modal-input').classList.remove('hidden');
+    });
+}
+
+    function handleUploadSuccess(fileData) {
+        // 1. Remove "No files" message
+        const noFilesMsg = document.getElementById('no-files-msg');
+        if (noFilesMsg) noFilesMsg.remove();
+
+        // 2. Icon logic
+        let iconName = 'file-text';
+        if(fileData.type === 'image') iconName = 'image';
+        if(fileData.type === 'video') iconName = 'play-circle';
+
+        // 3. Append to Modal List
+        const modalList = document.getElementById('modal-file-list');
+        const modalItem = document.createElement('div');
+        modalItem.className = 'bg-gray-50 p-3 rounded-xl text-sm border border-gray-100 flex justify-between items-center';
+        modalItem.innerHTML = `
+            <div class="flex items-center gap-2">
+                 <i data-lucide="${iconName}" class="w-4 h-4 text-primary"></i>
+                 <span class="font-bold text-secondary truncate w-32">${fileData.title}</span>
+            </div>
+            <button type="button" class="text-red-400 hover:text-red-600" onclick="deleteFile('${fileData.id}', this.parentElement)"><i data-lucide="x" class="w-4 h-4"></i></button>
+        `;
+        modalList.appendChild(modalItem);
+
+        // 4. Append to Preview List (Main Page)
+        const previewList = document.getElementById('preview-list');
+        const previewItem = document.createElement('div');
+        previewItem.id = `file-card-${fileData.id}`;
+        previewItem.className = 'bg-gray-100 px-3 py-1 rounded-lg text-xs font-bold text-gray-600 flex items-center gap-1';
+        previewItem.innerHTML = `<i data-lucide="${iconName}" class="w-3 h-3"></i> ${fileData.title}`;
+        previewList.appendChild(previewItem);
+
+        // Refresh icons
+        lucide.createIcons();
+    }
+
+    function deleteFile(fileId, elementToRemove) {
+        if(!confirm('Delete this file?')) return;
+        
+        fetch(`/files/delete/${fileId}/`, {
+            method: 'POST',
+            headers: {'X-CSRFToken': csrfToken}
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.success) {
+                // Remove from modal
+                elementToRemove.remove();
+                // Remove from preview list
+                const previewItem = document.getElementById(`file-card-${fileId}`);
+                if(previewItem) previewItem.remove();
+            }
+        });
+    }
+</script>
 {% endblock %}

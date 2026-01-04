@@ -2,7 +2,6 @@
 
 {% block content %}
 <div class="p-6">
-    <!-- Header -->
     <div class="flex items-center gap-4 mb-6">
         <a href="{% url 'adminpanel:patients' %}" class="bg-white p-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
             <i data-lucide="arrow-left" class="w-5 h-5 text-gray-600"></i>
@@ -10,8 +9,7 @@
         <h1 class="text-xl font-heading font-bold text-primary">Patient Details</h1>
     </div>
 
-    <!-- Info Card -->
-    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm mb-8">
+    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm mb-6">
         <div class="flex items-center gap-4 mb-6">
             <div class="w-16 h-16 bg-accent/10 text-accent rounded-full flex items-center justify-center text-2xl font-bold">
                 {{ patient.full_name|first }}
@@ -28,28 +26,24 @@
                 <span class="font-medium text-secondary">{{ patient.phone }}</span>
             </div>
             <div>
-                <span class="block text-xs text-gray-400 uppercase font-bold">Gender</span>
-                <span class="font-medium text-secondary">{{ patient.get_gender_display }}</span>
-            </div>
-            <div>
-                <span class="block text-xs text-gray-400 uppercase font-bold">DOB</span>
-                <span class="font-medium text-secondary">{{ patient.dob|default:"-" }}</span>
-            </div>
-            <div>
                 <span class="block text-xs text-gray-400 uppercase font-bold">Joined</span>
                 <span class="font-medium text-secondary">{{ patient.created_at|date:"M Y" }}</span>
             </div>
         </div>
-        
-        {% if patient.address %}
-        <div class="mt-4 pt-4 border-t border-gray-100">
-            <span class="block text-xs text-gray-400 uppercase font-bold">Address</span>
-            <span class="font-medium text-secondary text-sm">{{ patient.address }}</span>
-        </div>
-        {% endif %}
     </div>
 
-    <!-- Schedule New Appointment -->
+    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm mb-6 flex items-center justify-between">
+        <div>
+            <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-1">Patient Files</h3>
+            <p class="text-xs text-gray-400">Docs, X-Rays, Reports</p>
+        </div>
+        
+        <a href="{% url 'patient_files:admin_view_files' patient.id %}" class="bg-primary text-white text-xs font-bold px-4 py-3 rounded-xl shadow-lg shadow-teal-900/20 hover:bg-teal-800 transition-all flex items-center gap-2">
+            <i data-lucide="folder-open" class="w-4 h-4"></i>
+            View Files
+        </a>
+    </div>
+
     <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm mb-8">
         <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">Schedule Next Appointment</h3>
         
@@ -73,7 +67,6 @@
                 </div>
             </div>
 
-            <!-- Fee Section -->
             <div class="mb-6 pt-4 border-t border-gray-100">
                 <div class="flex items-center gap-2 mb-3">
                     <input type="checkbox" id="book_is_free" name="is_free" class="w-4 h-4 text-accent rounded border-gray-300 focus:ring-accent" onchange="toggleBookFeeInput()">
@@ -92,7 +85,6 @@
         </form>
     </div>
 
-    <!-- History -->
     <div>
         <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">Appointment History</h3>
         {% if appointments %}

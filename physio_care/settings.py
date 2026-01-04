@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'accounts',
     'appointments',
     'payments',
+    'patient_files',
 ]
 
 MIDDLEWARE = [
@@ -120,3 +121,27 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # RAZORPAY CONFIGURATION
 RAZORPAY_KEY_ID = "rzp_test_RSX0ju0pQdxSrQ"
 RAZORPAY_KEY_SECRET = "jSi7BPT7O9487V9VaG21UDlh"
+
+
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dt5zyo7ke',
+    'API_KEY': '287436863952423',
+    'API_SECRET': 'ksbDuwKFegWwat09qOhzr2CFsCk'
+}
+
+cloudinary.config( 
+  cloud_name = CLOUDINARY_STORAGE['CLOUD_NAME'], 
+  api_key = CLOUDINARY_STORAGE['API_KEY'], 
+  api_secret = CLOUDINARY_STORAGE['API_SECRET'],
+  secure = True
+)
+# ... existing code ...
+
+# FILE UPLOAD SETTINGS
+# Allow up to 100MB uploads (100 * 1024 * 1024)
+DATA_UPLOAD_MAX_MEMORY_SIZE = 104857600 
+FILE_UPLOAD_MAX_MEMORY_SIZE = 104857600

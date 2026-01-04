@@ -85,40 +85,60 @@ def booking_slots(request):
     
     return render(request, 'appointments/booking_slots.html', {'date': date_obj, 'slots': slots})
 
+# ... imports ...
+from patient_files.models import PatientFile # Import model
+
+# ... existing code ...
+
 @login_required
 def booking_confirm(request, slot_id):
     slot = get_object_or_404(DailySlot, id=slot_id)
+    
+    # 1. Fetch pre-uploaded files for this session (files uploaded in the modal before confirm)
+    # We identify them by patient + temp_slot_id
+    uploaded_files = []
+    if hasattr(request.user, 'patient'):
+        uploaded_files = PatientFile.objects.filter(
+            patient=request.user.patient,
+            temp_slot_id=slot_id,
+            appointment__isnull=True
+        )
     
     if request.method == 'POST':
         symptoms = request.POST.get('symptoms')
         
         with transaction.atomic():
-            # Lock the slot to prevent double booking
             slot = get_object_or_404(DailySlot.objects.select_for_update(), id=slot_id)
             
             if slot.is_full:
                 messages.error(request, "Slot was just taken.")
                 return redirect('appointments:booking_slots', date=slot.date)
 
-            # Create Appointment (Without Payment)
-            Appointment.objects.create(
+            # Create Appointment
+            appointment = Appointment.objects.create(
                 patient=request.user.patient,
                 slot=slot,
                 symptoms=symptoms,
                 status='CONFIRMED', 
                 payment_status='PENDING',
-                fee=None, # Fee is set by Doctor later
+                fee=None, 
                 is_free=False
             )
             
             slot.booked_count = F('booked_count') + 1
             slot.save()
             
+            # LINK FILES TO APPOINTMENT
+            # Move them from "temp" status to "linked"
+            uploaded_files.update(appointment=appointment, temp_slot_id=None)
+            
         messages.success(request, "Appointment booked successfully!")
         return redirect('appointments:home')
 
-    return render(request, 'appointments/booking_confirm.html', {'slot': slot})
-
+    return render(request, 'appointments/booking_confirm.html', {
+        'slot': slot, 
+        'uploaded_files': uploaded_files # Pass to template to show what's already added
+    })
 # --- OTHER VIEWS ---
 
 @login_required

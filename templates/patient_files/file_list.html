@@ -1,0 +1,70 @@
+{% extends 'appointments/base_mobile.html' %}
+{% block content %}
+<div class="p-6">
+    <div class="flex items-center gap-4 mb-6">
+        <button onclick="history.back()" class="bg-gray-100 p-2 rounded-lg hover:bg-gray-200 transition-colors">
+            <i data-lucide="arrow-left" class="w-5 h-5 text-gray-600"></i>
+        </button>
+        <h1 class="text-xl font-heading font-bold text-secondary">
+            {% if is_admin %}Patient Files{% else %}My Files{% endif %}
+        </h1>
+    </div>
+
+    {% if not files %}
+    <div class="text-center py-12">
+        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i data-lucide="folder-open" class="w-8 h-8 text-gray-400"></i>
+        </div>
+        <p class="text-gray-500 font-bold">No files uploaded yet.</p>
+    </div>
+    {% else %}
+    
+    <div class="grid grid-cols-2 gap-4">
+        {% for file in files %}
+        <div onclick="showFile('{{ file.title }}', '{{ file.file_url }}', '{{ file.file_type }}')" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm hover:border-primary transition-all cursor-pointer">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center mb-3 
+                {% if file.file_type == 'image' %}bg-purple-100 text-purple-600{% elif file.file_type == 'video' %}bg-pink-100 text-pink-600{% else %}bg-blue-100 text-blue-600{% endif %}">
+                <i data-lucide="{% if file.file_type == 'image' %}image{% elif file.file_type == 'video' %}play-circle{% else %}file-text{% endif %}" class="w-5 h-5"></i>
+            </div>
+            <h3 class="font-bold text-sm text-secondary truncate">{{ file.title }}</h3>
+            <p class="text-[10px] text-gray-400 mt-1">{{ file.uploaded_at|date:"M d, Y" }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+<div id="view-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex flex-col items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-3xl p-6 relative">
+        <button onclick="document.getElementById('view-modal').classList.add('hidden')" class="absolute top-4 right-4 bg-gray-100 p-2 rounded-full">
+            <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+        
+        <div class="text-center mb-6">
+            <div id="vm-icon" class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-gray-50"></div>
+            <h2 id="vm-title" class="text-lg font-bold text-secondary"></h2>
+        </div>
+
+        <a id="vm-btn" href="#" target="_blank" class="block w-full bg-primary text-white text-center font-bold py-4 rounded-xl shadow-lg">
+            View / Download
+        </a>
+    </div>
+</div>
+
+<script>
+    function showFile(title, url, type) {
+        document.getElementById('view-modal').classList.remove('hidden');
+        document.getElementById('vm-title').textContent = title;
+        document.getElementById('vm-btn').href = url;
+        
+        const iconContainer = document.getElementById('vm-icon');
+        let iconHtml = '';
+        if(type === 'image') iconHtml = '<i data-lucide="image" class="w-8 h-8 text-purple-500"></i>';
+        else if(type === 'video') iconHtml = '<i data-lucide="play-circle" class="w-8 h-8 text-pink-500"></i>';
+        else iconHtml = '<i data-lucide="file-text" class="w-8 h-8 text-blue-500"></i>';
+        
+        iconContainer.innerHTML = iconHtml;
+        lucide.createIcons();
+    }
+</script>
+{% endblock %}
