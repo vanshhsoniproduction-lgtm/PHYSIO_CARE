@@ -36,7 +36,6 @@
             <label class="block text-xs font-bold text-gray-700 uppercase mb-2">Reason (Optional)</label>
             <textarea name="symptoms" rows="2" class="w-full p-4 bg-gray-50 rounded-xl border border-gray-200 focus:border-primary outline-none text-sm" placeholder="e.g. Back pain..."></textarea>
         </div>
-
         <button type="submit" class="w-full bg-primary hover:bg-teal-800 text-white font-bold py-4 rounded-xl shadow-lg shadow-teal-900/20 transition-all active:scale-95">
             Confirm Appointment
         </button>
@@ -61,7 +60,7 @@
                          <i data-lucide="{% if file.file_type == 'image' %}image{% elif file.file_type == 'video' %}play-circle{% else %}file-text{% endif %}" class="w-4 h-4 text-primary"></i>
                          <span class="font-bold text-secondary truncate w-32">{{ file.title }}</span>
                     </div>
-                    <button type="button" class="text-red-400 hover:text-red-600" onclick="deleteFile('{{ file.id }}', this)"><i data-lucide="x" class="w-4 h-4"></i></button>
+                    <button type="button" class="text-red-400 hover:text-red-600" onclick="deleteFile('{{ file.id }}', this.parentElement)"><i data-lucide="x" class="w-4 h-4"></i></button>
                 </div>
                 {% endfor %}
             {% endif %}
@@ -70,10 +69,7 @@
         <button onclick="openInputModal()" class="w-full bg-gray-100 hover:bg-gray-200 text-secondary font-bold py-3 rounded-xl mb-3 flex items-center justify-center gap-2">
             <i data-lucide="plus" class="w-4 h-4"></i> Add File
         </button>
-        
-        <button onclick="closeModals()" class="w-full bg-primary text-white font-bold py-3 rounded-xl shadow-lg shadow-teal-900/20">
-            Done
-        </button>
+        <button onclick="closeModals()" class="w-full bg-primary text-white font-bold py-3 rounded-xl shadow-lg shadow-teal-900/20">Done</button>
     </div>
 </div>
 
@@ -93,129 +89,152 @@
                 <label class="block text-xs font-bold text-gray-700 mb-1">Select File</label>
                 <input type="file" id="file-upload" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20">
             </div>
+            
+            <div id="progress-container" class="hidden">
+                <div class="w-full bg-gray-200 rounded-full h-2.5 mb-1">
+                    <div id="progress-bar" class="bg-primary h-2.5 rounded-full" style="width: 0%"></div>
+                </div>
+                <p id="progress-text" class="text-xs text-gray-500 text-center">0%</p>
+            </div>
+
             <div id="upload-error" class="text-red-500 text-xs font-bold hidden"></div>
             
-            <button onclick="startUpload()" class="w-full bg-primary text-white font-bold py-3 rounded-xl shadow-lg mt-2">
+            <button id="upload-btn" onclick="directUpload()" class="w-full bg-primary text-white font-bold py-3 rounded-xl shadow-lg mt-2">
                 Start Upload
             </button>
         </div>
     </div>
 </div>
 
-<div id="loader" class="fixed inset-0 bg-white/80 backdrop-blur-md z-[70] hidden flex flex-col items-center justify-center">
-    <div class="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
-    <p class="text-primary font-bold animate-pulse">Processing...</p>
-</div>
-
 <script>
     const slotId = "{{ slot.id }}";
     const csrfToken = "{{ csrf_token }}";
 
-    function openUploadModal() {
-        document.getElementById('modal-select').classList.remove('hidden');
-    }
+    function openUploadModal() { document.getElementById('modal-select').classList.remove('hidden'); }
+    function closeModals() { document.getElementById('modal-select').classList.add('hidden'); document.getElementById('modal-input').classList.add('hidden'); }
+    function openInputModal() { document.getElementById('modal-select').classList.add('hidden'); document.getElementById('modal-input').classList.remove('hidden'); }
+    function closeInputModal() { document.getElementById('modal-input').classList.add('hidden'); document.getElementById('modal-select').classList.remove('hidden'); }
 
-    function closeModals() {
-        document.getElementById('modal-select').classList.add('hidden');
-        document.getElementById('modal-input').classList.add('hidden');
-    }
+    async function directUpload() {
+        const title = document.getElementById('file-title').value;
+        const fileInput = document.getElementById('file-upload');
+        const file = fileInput.files[0];
+        const errorDiv = document.getElementById('upload-error');
+        const uploadBtn = document.getElementById('upload-btn');
+        const progressContainer = document.getElementById('progress-container');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
 
-    function openInputModal() {
-        document.getElementById('modal-select').classList.add('hidden');
-        document.getElementById('modal-input').classList.remove('hidden');
-    }
-
-    function closeInputModal() {
-        document.getElementById('modal-input').classList.add('hidden');
-        document.getElementById('modal-select').classList.remove('hidden');
-    }
-
-// Replace the existing startUpload function with this robust version:
-
-function startUpload() {
-    const titleInput = document.getElementById('file-title');
-    const fileInput = document.getElementById('file-upload');
-    const errorDiv = document.getElementById('upload-error');
-    
-    const title = titleInput.value;
-    const file = fileInput.files[0];
-
-    // Reset error
-    errorDiv.classList.add('hidden');
-
-    if (!title || !file) {
-        errorDiv.textContent = "Please fill all fields";
-        errorDiv.classList.remove('hidden');
-        return;
-    }
-
-    // Size Validation
-    const sizeMb = file.size / (1024 * 1024);
-    const isVideo = file.type.startsWith('video/');
-    const limit = isVideo ? 90 : 9; // 90MB for video, 9MB for others
-
-    if (sizeMb > limit) {
-        errorDiv.textContent = `File too large (Max ${limit}MB)`;
-        errorDiv.classList.remove('hidden');
-        return;
-    }
-
-    // UI Updates
-    const loader = document.getElementById('loader');
-    const loaderText = loader.querySelector('p');
-    loader.classList.remove('hidden');
-    loaderText.textContent = isVideo ? "Uploading Video (This may take time)..." : "Uploading...";
-    
-    document.getElementById('modal-input').classList.add('hidden');
-
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('title', title);
-    formData.append('slot_id', slotId);
-    formData.append('csrfmiddlewaretoken', csrfToken);
-
-    // Increase timeout handling by using standard fetch
-    fetch("{% url 'patient_files:upload' %}", {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => {
-        if (!response.ok) {
-            return response.json().then(data => { throw new Error(data.error || 'Upload failed'); });
+        if (!title || !file) {
+            errorDiv.textContent = "Please fill all fields"; errorDiv.classList.remove('hidden'); return;
         }
-        return response.json();
-    })
-    .then(data => {
-        loader.classList.add('hidden');
-        if (data.error) {
-            throw new Error(data.error);
-        } else {
-            // SUCCESS
-            handleUploadSuccess(data);
-            titleInput.value = '';
-            fileInput.value = '';
-            openUploadModal(); // Show list again
+
+        // --- STEP 1: PREPARE UI ---
+        errorDiv.classList.add('hidden');
+        uploadBtn.disabled = true;
+        uploadBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        progressContainer.classList.remove('hidden');
+
+        try {
+            // Determine folder type
+            let folderType = 'documents';
+            if (file.type.startsWith('image/')) folderType = 'images';
+            if (file.type.startsWith('video/')) folderType = 'videos';
+
+            // --- STEP 2: GET SIGNATURE FROM DJANGO ---
+            const sigResp = await fetch(`{% url 'patient_files:get_signature' %}?slot_id=${slotId}&folder_type=${folderType}`);
+            if (!sigResp.ok) throw new Error('Failed to get permission');
+            const sigData = await sigResp.json();
+
+            // --- STEP 3: UPLOAD TO CLOUDINARY DIRECTLY ---
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('api_key', sigData.api_key);
+            formData.append('timestamp', sigData.timestamp);
+            formData.append('signature', sigData.signature);
+            formData.append('folder', sigData.folder);
+            formData.append('source', 'uw'); // matching signature param
+            if (sigData.eager) formData.append('eager', sigData.eager);
+            if (sigData.eager_async) formData.append('eager_async', sigData.eager_async);
+
+            // XHR for Progress
+            const xhr = new XMLHttpRequest();
+            const cloudName = sigData.cloud_name;
+            const resourceType = folderType === 'documents' ? 'raw' : (folderType === 'videos' ? 'video' : 'image'); // 'raw' is safer for docs
+            const uploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType === 'document' ? 'raw' : resourceType}/upload`;
+
+            await new Promise((resolve, reject) => {
+                xhr.open('POST', uploadUrl, true);
+
+                xhr.upload.onprogress = (e) => {
+                    if (e.lengthComputable) {
+                        const percent = Math.round((e.loaded / e.total) * 100);
+                        progressBar.style.width = percent + '%';
+                        progressText.textContent = `Uploading... ${percent}%`;
+                    }
+                };
+
+                xhr.onload = () => {
+                    if (xhr.status === 200) {
+                        resolve(JSON.parse(xhr.responseText));
+                    } else {
+                        reject(new Error('Cloudinary Upload Failed'));
+                    }
+                };
+                xhr.onerror = () => reject(new Error('Network Error'));
+                xhr.send(formData);
+            })
+            .then(async (cloudinaryData) => {
+                // --- STEP 4: SAVE METADATA TO DJANGO ---
+                progressText.textContent = "Finalizing...";
+                
+                const saveResp = await fetch("{% url 'patient_files:save_metadata' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: new URLSearchParams({
+                        'title': title,
+                        'url': cloudinaryData.secure_url,
+                        'public_id': cloudinaryData.public_id,
+                        'resource_type': cloudinaryData.resource_type,
+                        'slot_id': slotId
+                    })
+                });
+
+                if (!saveResp.ok) throw new Error('Failed to save file info');
+                const savedFile = await saveResp.json();
+                
+                // --- STEP 5: SUCCESS ---
+                handleUploadSuccess(savedFile);
+                document.getElementById('file-title').value = '';
+                fileInput.value = '';
+                progressContainer.classList.add('hidden');
+                uploadBtn.disabled = false;
+                uploadBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                openUploadModal(); // Back to list
+            });
+
+        } catch (err) {
+            console.error(err);
+            errorDiv.textContent = "Upload failed: " + err.message;
+            errorDiv.classList.remove('hidden');
+            uploadBtn.disabled = false;
+            uploadBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            progressContainer.classList.add('hidden');
         }
-    })
-    .catch(err => {
-        loader.classList.add('hidden');
-        errorDiv.textContent = err.message || "Upload failed. Check your connection.";
-        errorDiv.classList.remove('hidden');
-        document.getElementById('modal-input').classList.remove('hidden');
-    });
-}
+    }
 
     function handleUploadSuccess(fileData) {
-        // 1. Remove "No files" message
+        // (Yeh function same rahega as previous, bas icon logic ensure kar lena)
         const noFilesMsg = document.getElementById('no-files-msg');
         if (noFilesMsg) noFilesMsg.remove();
 
-        // 2. Icon logic
         let iconName = 'file-text';
         if(fileData.type === 'image') iconName = 'image';
         if(fileData.type === 'video') iconName = 'play-circle';
 
-        // 3. Append to Modal List
         const modalList = document.getElementById('modal-file-list');
         const modalItem = document.createElement('div');
         modalItem.className = 'bg-gray-50 p-3 rounded-xl text-sm border border-gray-100 flex justify-between items-center';
@@ -228,21 +247,19 @@ function startUpload() {
         `;
         modalList.appendChild(modalItem);
 
-        // 4. Append to Preview List (Main Page)
         const previewList = document.getElementById('preview-list');
         const previewItem = document.createElement('div');
         previewItem.id = `file-card-${fileData.id}`;
         previewItem.className = 'bg-gray-100 px-3 py-1 rounded-lg text-xs font-bold text-gray-600 flex items-center gap-1';
         previewItem.innerHTML = `<i data-lucide="${iconName}" class="w-3 h-3"></i> ${fileData.title}`;
         previewList.appendChild(previewItem);
-
-        // Refresh icons
+        
         lucide.createIcons();
     }
-
+    
+    // deleteFile function same rahega
     function deleteFile(fileId, elementToRemove) {
         if(!confirm('Delete this file?')) return;
-        
         fetch(`/files/delete/${fileId}/`, {
             method: 'POST',
             headers: {'X-CSRFToken': csrfToken}
@@ -250,9 +267,7 @@ function startUpload() {
         .then(res => res.json())
         .then(data => {
             if(data.success) {
-                // Remove from modal
                 elementToRemove.remove();
-                // Remove from preview list
                 const previewItem = document.getElementById(`file-card-${fileId}`);
                 if(previewItem) previewItem.remove();
             }
