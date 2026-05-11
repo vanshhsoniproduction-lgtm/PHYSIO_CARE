@@ -9,6 +9,8 @@ import cloudinary
 import cloudinary.utils
 import time
 
+from appointments.models import Appointment
+
 @login_required
 def get_upload_signature(request):
     """
@@ -23,6 +25,11 @@ def get_upload_signature(request):
     slot_id = request.GET.get('slot_id')
     appointment_id = request.GET.get('appointment_id')
     
+    # Security Check: Ensure appointment belongs to the patient
+    if appointment_id:
+        if not Appointment.objects.filter(id=appointment_id, patient=patient).exists():
+            return JsonResponse({'error': 'Invalid appointment access'}, status=403)
+
     # Construct Folder Path
     appt_folder_name = str(appointment_id) if appointment_id else f"pending_slot_{slot_id}"
     folder_path = f"physio-care/patients/{patient.id}_{patient.user.username}/appointments/{appt_folder_name}/{folder_type}"
@@ -76,6 +83,11 @@ def save_file_metadata(request):
     if not all([title, url, public_id, resource_type]):
         return JsonResponse({'error': 'Missing data'}, status=400)
 
+    # Security Check: Ensure appointment belongs to the patient
+    if appointment_id:
+        if not Appointment.objects.filter(id=appointment_id, patient=patient).exists():
+            return JsonResponse({'error': 'Invalid appointment access'}, status=403)
+
     # Map resource_type to model choices
     file_type = 'document'
     if resource_type == 'image': file_type = 'image'
@@ -98,17 +110,18 @@ def save_file_metadata(request):
         'type': p_file.file_type
     })
 
-# ... delete_file aur list_files views same rahenge ...
 @login_required
 @require_POST
 def delete_file(request, file_id):
-    # (Pichle code wala logic same rahega)
-    patient = getattr(request.user, 'patient', None)
     p_file = get_object_or_404(PatientFile, id=file_id)
-    if patient and p_file.patient != patient:
+    
+    # Security: Only owner or staff can delete
+    is_owner = hasattr(request.user, 'patient') and p_file.patient == request.user.patient
+    is_staff = request.user.is_staff
+    
+    if not (is_owner or is_staff):
         return JsonResponse({'error': 'Permission denied'}, status=403)
     
-    # Cloudinary se bhi delete kar sakte hain (Optional)
     p_file.delete()
     return JsonResponse({'success': True})
 
