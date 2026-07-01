@@ -35,9 +35,6 @@
   <section class="relative min-h-screen flex items-center pt-36 pb-24 px-6 sm:px-8 bg-transparent">
     <div class="max-w-5xl mx-auto w-full text-center flex flex-col items-center justify-center relative z-10">
       
-      <!-- Badge -->
-      <span class="text-xs font-black uppercase tracking-[0.25em] text-teal-400 font-display mb-4">RESTORE. RECLAIM. RECOVER.</span>
-      
       <h1 class="text-5xl sm:text-7xl lg:text-8xl font-black font-display tracking-tight text-white leading-[1.02] mb-8">
         RESTORE YOUR<br>MOTION.<br>
         <span class="text-teal-400 font-black">
@@ -355,88 +352,112 @@
     </div>
   </section>
   {% endif %}
-
-  <!-- ============================================
-       BOOKING CTA SECTION
-       ============================================ -->
-  <section class="py-24 px-6 sm:px-8 bg-transparent" id="booking">
-    <div class="max-w-4xl mx-auto p-8 sm:p-16 rounded-[2.5rem] bg-zinc-900/30 backdrop-blur-xl border border-zinc-800 shadow-2xl text-center relative overflow-hidden reveal-scale">
-      <div class="absolute -top-24 -left-24 w-48 h-48 bg-teal-500/5 rounded-full blur-3xl pointer-events-none"></div>
-      
-      <span class="text-xs font-black uppercase tracking-[0.25em] text-teal-400 font-display">READY TO RECOVER?</span>
-      <h2 class="text-3xl sm:text-5xl font-black font-display tracking-tight text-white mt-3 mb-8">Start Your Journey Today</h2>
-      
-      <a href="{% if user.is_authenticated %}{% url 'appointments:home' %}{% else %}{% url 'accounts:auth' %}{% endif %}" class="inline-flex items-center gap-2 px-10 py-4 bg-teal-600 hover:bg-teal-500 text-white font-black rounded-2xl shadow-lg shadow-teal-600/20 active:scale-[0.98] transition-all" data-magnetic>
-        Book Appointment
-        <span class="material-symbols-rounded text-lg">arrow_forward</span>
-      </a>
-      
-      <div class="flex flex-wrap justify-center gap-8 text-[10px] font-black uppercase tracking-widest text-zinc-500 mt-12">
-        <span>Fast Recovery</span>
-        <span>Expert Guidance</span>
-        <span>Real Results</span>
-      </div>
-    </div>
-  </section>
-
 </main>
 {% endblock %}
 
 {% block extra_scripts %}
 <script>
   // ============================================
-  // SCROLL CONTROLLED VIDEO PROGRESS
+  // SCROLL-CONTROLLED VIDEO — LINEAR ENGINE
+  // Scroll position maps directly to video time
+  // Scroll down = forward, scroll up = reverse
   // ============================================
   (function() {
     const video = document.getElementById('scroll-bg-video');
     if (!video) return;
 
+    // --- Override base.html splash ---
+    window.__home2VideoSplash = true;
+
+    let videoReady = false;
     let targetTime = 0;
     let currentTime = 0;
+    let splashDismissed = false;
 
-    function updateTargetTime() {
-      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-      if (scrollHeight <= 0) return;
-      const scrollPercent = window.scrollY / scrollHeight;
-      if (video.duration) {
-        targetTime = video.duration * scrollPercent;
-      }
+    // --- SPLASH DISMISS ---
+    function dismissSplash() {
+      if (splashDismissed) return;
+      splashDismissed = true;
+      const splash = document.getElementById('splash-screen');
+      const pageContent = document.getElementById('page-content');
+      if (!splash || !pageContent) return;
+      splash.classList.add('splash-exit');
+      pageContent.classList.remove('opacity-0');
+      pageContent.classList.add('opacity-100');
+      setTimeout(() => splash.remove(), 700);
     }
 
-    // Force browser to decode video streams smoothly by triggering play and then pause on load
+    // Safety fallback
+    setTimeout(dismissSplash, 4000);
+
+    video.addEventListener('canplaythrough', function f() {
+      video.removeEventListener('canplaythrough', f);
+      dismissSplash();
+    });
+
+    // --- PRIME VIDEO ---
     function primeVideo() {
       video.play().then(() => {
         video.pause();
-        updateTargetTime();
-      }).catch(err => {
-        console.log("Video auto-prime handled:", err);
+        video.currentTime = 0;
+        videoReady = true;
+        dismissSplash();
+      }).catch(() => {
+        videoReady = true;
+        dismissSplash();
       });
     }
 
-    video.addEventListener('loadeddata', primeVideo);
+    // --- SIMPLE LINEAR: scroll% = video% ---
+    function updateTargetTime() {
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (scrollHeight <= 0 || !video.duration) return;
+      const scrollY = window.scrollY || window.pageYOffset || 0;
+      const scrollPercent = Math.max(0, Math.min(1, scrollY / scrollHeight));
+      // Clamp to duration - 0.2 seconds to prevent the browser from auto-resetting/looping on end
+      targetTime = scrollPercent * (video.duration - 0.2);
+    }
 
-    window.addEventListener('scroll', () => {
-      updateTargetTime();
-    }, { passive: true });
-
-    // Smooth playback loop
+    // --- SMOOTH ANIMATION LOOP ---
     function animLoop() {
-      if (video.duration) {
+      if (videoReady && video.duration) {
         const diff = targetTime - currentTime;
-        // Check if delta is meaningful
-        if (Math.abs(diff) > 0.002) {
-          currentTime += diff * 0.1; // Smooth interpolation factor
-          video.currentTime = Math.max(0, Math.min(video.duration - 0.02, currentTime));
+        if (Math.abs(diff) > 0.001) {
+          currentTime += diff * 0.18;
+          const t = Math.max(0, Math.min(video.duration - 0.2, currentTime));
+          if (Math.abs(video.currentTime - t) > 0.01) {
+            try { video.currentTime = t; } catch(e) {}
+          }
         }
       }
       requestAnimationFrame(animLoop);
     }
-    
-    if (video.readyState >= 2) {
+
+    // --- LISTENERS ---
+    window.addEventListener('scroll', updateTargetTime, { passive: true });
+    window.addEventListener('touchmove', updateTargetTime, { passive: true });
+    window.addEventListener('resize', updateTargetTime, { passive: true });
+
+    // --- INIT ---
+    function init() {
       primeVideo();
+      requestAnimationFrame(animLoop);
     }
 
-    requestAnimationFrame(animLoop);
+    if (video.readyState >= 2) {
+      init();
+    } else {
+      video.addEventListener('loadeddata', init, { once: true });
+    }
+
+    // --- RE-SYNC on tab return ---
+    document.addEventListener('visibilitychange', function() {
+      if (!document.hidden && video.duration) {
+        updateTargetTime();
+        currentTime = targetTime;
+        try { video.currentTime = Math.max(0, Math.min(video.duration - 0.2, currentTime)); } catch(e) {}
+      }
+    });
   })();
 </script>
 {% endblock %}

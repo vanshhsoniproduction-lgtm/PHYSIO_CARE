@@ -311,10 +311,6 @@
     <footer class="relative {% if is_home2 %}bg-zinc-900/30 border-t border-white/10 backdrop-blur-lg{% else %}bg-zinc-950 border-t border-zinc-900{% endif %} text-zinc-400 overflow-hidden py-16 px-6 sm:px-8">
       <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-px bg-gradient-to-r from-transparent via-teal-500/30 to-transparent"></div>
       <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-lg h-32 bg-teal-500/5 blur-[120px] pointer-events-none"></div>
-      
-      <video autoplay loop muted playsinline preload="auto" class="absolute inset-0 w-full h-full object-cover opacity-[0.04] pointer-events-none z-0">
-        <source src="/media/bg%20video_bone.mp4" type="video/mp4">
-      </video>
 
       <div class="relative max-w-7xl mx-auto z-10">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16 items-start">
@@ -378,8 +374,11 @@
     <script>
       // ============================================
       // SPLASH SCREEN
+      // home2 overrides this with video-ready logic
       // ============================================
       window.addEventListener('load', () => {
+        // If home2 video splash is active, skip default timer-based dismiss
+        if (window.__home2VideoSplash) return;
         const splash = document.getElementById('splash-screen');
         const pageContent = document.getElementById('page-content');
         setTimeout(() => {
