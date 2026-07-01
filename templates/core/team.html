@@ -1,0 +1,100 @@
+{% extends "core/base.html" %}
+
+{% block title %}Our Team | Physio Care{% endblock %}
+{% block meta_desc %}Meet the expert physiotherapy team at Physio Care led by Dr. Bhubon Chatterji.{% endblock %}
+
+{% block content %}
+<main class="relative overflow-hidden">
+  
+  <!-- Hero Section -->
+  <section class="pt-32 pb-16 px-6 sm:px-8">
+    <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-teal-500/5 rounded-full blur-[100px] pointer-events-none"></div>
+    <div class="max-w-7xl mx-auto w-full">
+      
+      <div class="text-center max-w-2xl mx-auto mb-16 reveal">
+        <span class="text-xs font-bold uppercase tracking-[0.2em] text-teal-600">Our Specialists</span>
+        <h1 class="text-3xl sm:text-5xl font-extrabold font-display tracking-tight text-zinc-900 dark:text-white mt-2 mb-4">Meet the Team</h1>
+        <p class="text-zinc-500 dark:text-zinc-400">
+          A dedicated group of specialists committed to restoring movement, relieving pain, and reclaiming lives through expert care.
+        </p>
+      </div>
+
+      <!-- Group Photo Banner -->
+      <div class="w-full h-96 bg-gradient-to-br from-teal-600 to-teal-900 rounded-3xl overflow-hidden shadow-2xl relative flex items-end p-8 sm:p-12 reveal-scale">
+        <div class="absolute inset-0 bg-black/40 z-10"></div>
+        <div class="relative z-20 max-w-xl text-white">
+          <h3 class="text-2xl sm:text-3xl font-extrabold font-display mb-2">The Physio Care Family</h3>
+          <p class="text-sm text-white/80 leading-relaxed">Our team of specialists brings together decades of combined experience in physiotherapy and rehabilitation, ensuring you receive world-class care.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team Members Grid -->
+  <section class="py-20 bg-zinc-50 dark:bg-zinc-900/40 px-6 sm:px-8 border-y border-zinc-150 dark:border-zinc-850">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center max-w-2xl mx-auto mb-16 reveal">
+        <span class="text-xs font-bold uppercase tracking-[0.2em] text-teal-600">Our Experts</span>
+        <h2 class="text-3xl font-extrabold font-display tracking-tight text-zinc-900 dark:text-white mt-2">Specialized Doctors</h2>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 stagger-children">
+        {% for member in team_members %}
+        <div class="{% if member.is_lead %}col-span-full grid grid-cols-1 md:grid-cols-5 border-teal-500/25{% else %}col-span-1 border-zinc-150 dark:border-zinc-800{% endif %} relative bg-white dark:bg-zinc-900 border rounded-3xl shadow-md overflow-hidden hover:shadow-xl hover:translate-y-[-6px] transition-all duration-300 group reveal" {% if not member.is_lead %}data-tilt{% endif %}>
+          
+          {% if member.is_lead %}
+          <!-- Lead accent stripe -->
+          <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-teal-600 to-indigo-600"></div>
+          {% endif %}
+          
+          <!-- Image Section -->
+          <div class="{% if member.is_lead %}md:col-span-2 h-72 md:h-full{% else %}h-72{% endif %} overflow-hidden relative bg-zinc-100 dark:bg-zinc-800">
+            {% if member.image %}
+              <img src="{{ member.image }}" alt="{{ member.name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+            {% else %}
+              <div class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-teal-500/10 to-indigo-500/5 text-teal-600">
+                <span class="material-symbols-rounded text-6xl opacity-30">person</span>
+              </div>
+            {% endif %}
+          </div>
+          
+          <!-- Card Info -->
+          <div class="{% if member.is_lead %}md:col-span-3 p-8 sm:p-10 justify-center{% else %}p-6{% endif %} flex flex-col gap-3">
+            <div>
+              <h3 class="{% if member.is_lead %}text-2xl{% else %}text-lg{% endif %} font-extrabold font-display text-zinc-800 dark:text-zinc-100">{{ member.name }}</h3>
+              <div class="text-xs font-bold uppercase tracking-wider text-teal-600 mt-1">{{ member.role }}</div>
+            </div>
+            
+            <div class="text-xs text-zinc-500 dark:text-zinc-400 font-medium">{{ member.qualifications }}</div>
+            
+            <p class="{% if member.is_lead %}opacity-100 max-h-none text-sm leading-relaxed mt-2{% else %}opacity-0 max-h-0 text-xs leading-relaxed group-hover:opacity-100 group-hover:max-h-32{% endif %} text-zinc-500 dark:text-zinc-400 overflow-hidden transition-all duration-500 ease-out">{{ member.bio }}</p>
+            
+            <div class="flex flex-wrap gap-2 mt-4">
+              {% for specialty in member.specialties %}
+                <span class="px-3 py-1 bg-zinc-50 dark:bg-zinc-850 border border-zinc-100 dark:border-zinc-800 text-[10px] font-bold text-zinc-500 dark:text-zinc-400 rounded-full">{{ specialty }}</span>
+              {% endfor %}
+            </div>
+          </div>
+          
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-20 px-6 sm:px-8">
+    <div class="max-w-4xl mx-auto p-8 sm:p-12 rounded-[2rem] bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 shadow-xl text-center reveal-scale">
+      <span class="text-xs font-bold uppercase tracking-[0.25em] text-teal-600 font-display">Get Expert Care</span>
+      <h2 class="text-2xl sm:text-3xl font-extrabold font-display tracking-tight text-zinc-900 dark:text-white mt-2 mb-4">Ready to Consult a Specialist?</h2>
+      <p class="text-sm text-zinc-500 dark:text-zinc-400 max-w-lg mx-auto mb-8">Book an appointment and get personalized care from our expert team.</p>
+      
+      <a href="{% if user.is_authenticated %}{% url 'appointments:home' %}{% else %}{% url 'accounts:auth' %}{% endif %}" class="inline-flex items-center gap-2 px-8 py-3.5 bg-teal-600 hover:bg-teal-500 text-white font-bold rounded-xl shadow-lg active:scale-[0.98] transition-all" data-magnetic>
+        Book Appointment
+        <span class="material-symbols-rounded text-lg">arrow_forward</span>
+      </a>
+    </div>
+  </section>
+  
+</main>
+{% endblock %}

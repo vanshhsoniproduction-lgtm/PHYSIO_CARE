@@ -1,0 +1,195 @@
+{% extends "core/base.html" %}
+
+{% block title %}About Us | Physio Care — Dr. Bhubon Chatterji{% endblock %}
+{% block meta_desc %}Learn about Physio Care and Dr. Bhubon Chatterji — 20+ years of clinical excellence in physiotherapy.{% endblock %}
+
+{% block content %}
+<main class="relative overflow-hidden">
+  
+  <!-- Hero / Story Section -->
+  <section class="pt-32 pb-16 px-6 sm:px-8">
+    <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-teal-500/5 rounded-full blur-[100px] pointer-events-none"></div>
+    <div class="max-w-7xl mx-auto w-full">
+      
+      <div class="text-center max-w-2xl mx-auto mb-16 reveal">
+        <span class="text-xs font-bold uppercase tracking-[0.2em] text-teal-600">Our Story</span>
+        <h1 class="text-3xl sm:text-5xl font-extrabold font-display tracking-tight text-zinc-900 dark:text-white mt-2 mb-4">About Physio Care</h1>
+        <p class="text-zinc-500 dark:text-zinc-400">
+          A legacy of healing built on two decades of clinical expertise, compassionate care, and a relentless commitment to restoring lives.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <!-- Doctor Image -->
+        <div class="relative w-full max-w-sm mx-auto md:mx-0 justify-self-center reveal-left">
+          <div class="rounded-3xl overflow-hidden shadow-2xl border border-zinc-100 dark:border-zinc-800">
+            <img src="/media/DOCTOR.jpeg" alt="Dr. Bhubon Chatterji" class="w-full h-auto object-cover object-center hover:scale-[1.03] transition-transform duration-500" />
+          </div>
+          <!-- Experience Badge -->
+          <div class="absolute bottom-4 left-4 right-4 bg-zinc-900/80 dark:bg-zinc-950/80 backdrop-blur-md rounded-2xl p-4 flex items-center gap-3 border border-white/10">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center bg-teal-600 text-white">
+              <span class="material-symbols-rounded text-lg">workspace_premium</span>
+            </div>
+            <div>
+              <div class="text-xs font-bold text-white">20+ Years Experience</div>
+              <div class="text-[10px] text-zinc-400 font-semibold mt-0.5">Board Certified Physiotherapist</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bio text -->
+        <div class="reveal-right flex flex-col gap-6 text-zinc-500 dark:text-zinc-400 text-sm sm:text-base leading-relaxed">
+          <div>
+            <h2 class="text-2xl font-extrabold font-display text-zinc-850 dark:text-white mb-1">Dr. Bhubon Chatterji</h2>
+            <div class="text-xs font-bold uppercase tracking-wider text-teal-600">Director & Lead Specialist</div>
+          </div>
+          <p>With more than 20 years in the field, Dr. Chatterji has developed a unique approach that prioritizes long-term restoration over short-term relief. His philosophy is rooted in the belief that every patient deserves a precise, evidence-based treatment plan tailored to their specific needs.</p>
+          <p>Having trained extensively in advanced manual therapy, sports rehabilitation, and spine care, Dr. Chatterji brings a rare combination of clinical depth and empathetic care to every patient interaction. His pioneering work in tele-rehabilitation has made world-class physiotherapy accessible to patients globally.</p>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4 pt-4 border-t border-zinc-100 dark:border-zinc-850">
+            <div class="flex items-center gap-2 text-zinc-700 dark:text-zinc-300 text-xs font-bold">
+              <span class="material-symbols-rounded text-teal-600 text-lg">check_circle</span> Spine Expert
+            </div>
+            <div class="flex items-center gap-2 text-zinc-700 dark:text-zinc-300 text-xs font-bold">
+              <span class="material-symbols-rounded text-teal-600 text-lg">check_circle</span> Sports Rehab
+            </div>
+            <div class="flex items-center gap-2 text-zinc-700 dark:text-zinc-300 text-xs font-bold">
+              <span class="material-symbols-rounded text-teal-600 text-lg">check_circle</span> Manual Therapy
+            </div>
+            <div class="flex items-center gap-2 text-zinc-700 dark:text-zinc-300 text-xs font-bold">
+              <span class="material-symbols-rounded text-teal-600 text-lg">check_circle</span> Geriatric Expert
+            </div>
+            <div class="flex items-center gap-2 text-zinc-700 dark:text-zinc-300 text-xs font-bold">
+              <span class="material-symbols-rounded text-teal-600 text-lg">check_circle</span> Tele-Rehabilitation
+            </div>
+            <div class="flex items-center gap-2 text-zinc-700 dark:text-zinc-300 text-xs font-bold">
+              <span class="material-symbols-rounded text-teal-600 text-lg">check_circle</span> Pain Management
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="relative bg-zinc-950 text-white py-16 px-6 sm:px-8 overflow-hidden">
+    <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-teal-500/20 to-transparent"></div>
+    <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center relative z-10">
+      <div class="reveal">
+        <div class="text-4xl font-extrabold text-teal-400 font-display">20+</div>
+        <div class="text-[10px] font-bold uppercase tracking-wider text-zinc-500 mt-2">Years Experience</div>
+      </div>
+      <div class="reveal">
+        <div class="text-4xl font-extrabold text-teal-400 font-display">5000+</div>
+        <div class="text-[10px] font-bold uppercase tracking-wider text-zinc-500 mt-2">Patients Treated</div>
+      </div>
+      <div class="reveal">
+        <div class="text-4xl font-extrabold text-teal-400 font-display">98%</div>
+        <div class="text-[10px] font-bold uppercase tracking-wider text-zinc-500 mt-2">Success Rate</div>
+      </div>
+      <div class="reveal">
+        <div class="text-4xl font-extrabold text-teal-400 font-display">15+</div>
+        <div class="text-[10px] font-bold uppercase tracking-wider text-zinc-500 mt-2">Countries Served</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Philosophy Section -->
+  <section class="py-20 bg-zinc-50 dark:bg-zinc-900/40 px-6 sm:px-8 border-b border-zinc-100 dark:border-zinc-800">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center max-w-2xl mx-auto mb-16 reveal">
+        <span class="text-xs font-bold uppercase tracking-[0.2em] text-teal-600">Our Philosophy</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold font-display tracking-tight text-zinc-900 dark:text-white mt-2 mb-4">What Drives Us</h2>
+        <p class="text-zinc-500 dark:text-zinc-400">
+          Our core values shape every interaction, treatment, and outcome.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 stagger-children">
+        <div class="p-8 bg-white dark:bg-zinc-900 rounded-3xl border border-zinc-100 dark:border-zinc-850 text-center hover:shadow-xl hover:translate-y-[-4px] transition-all duration-300 reveal" data-tilt>
+          <div class="w-14 h-14 rounded-2xl flex items-center justify-center bg-teal-50 dark:bg-teal-950/30 text-teal-600 dark:text-teal-400 mx-auto mb-6">
+            <span class="material-symbols-rounded text-2xl">target</span>
+          </div>
+          <h4 class="text-lg font-bold text-zinc-850 dark:text-zinc-200 mb-2">Precision Care</h4>
+          <p class="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">Every treatment plan is precisely tailored to individual needs using evidence-based assessment and data-driven protocols.</p>
+        </div>
+        
+        <div class="p-8 bg-white dark:bg-zinc-900 rounded-3xl border border-zinc-100 dark:border-zinc-850 text-center hover:shadow-xl hover:translate-y-[-4px] transition-all duration-300 reveal" data-tilt>
+          <div class="w-14 h-14 rounded-2xl flex items-center justify-center bg-teal-50 dark:bg-teal-950/30 text-teal-600 dark:text-teal-400 mx-auto mb-6">
+            <span class="material-symbols-rounded text-2xl">favorite</span>
+          </div>
+          <h4 class="text-lg font-bold text-zinc-850 dark:text-zinc-200 mb-2">Patient-First</h4>
+          <p class="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">We believe in treating the person, not just the condition. Your goals, comfort, and long-term wellbeing guide every decision.</p>
+        </div>
+        
+        <div class="p-8 bg-white dark:bg-zinc-900 rounded-3xl border border-zinc-100 dark:border-zinc-850 text-center hover:shadow-xl hover:translate-y-[-4px] transition-all duration-300 reveal" data-tilt>
+          <div class="w-14 h-14 rounded-2xl flex items-center justify-center bg-teal-50 dark:bg-teal-950/30 text-teal-600 dark:text-teal-400 mx-auto mb-6">
+            <span class="material-symbols-rounded text-2xl">rocket_launch</span>
+          </div>
+          <h4 class="text-lg font-bold text-zinc-850 dark:text-zinc-200 mb-2">Continuous Innovation</h4>
+          <p class="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">We stay at the forefront of physiotherapy research, integrating the latest techniques and technologies into our practice.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Journey Timeline -->
+  <section class="py-20 px-6 sm:px-8">
+    <div class="max-w-3xl mx-auto">
+      <div class="text-center mb-16 reveal">
+        <span class="text-xs font-bold uppercase tracking-[0.2em] text-teal-600">Our Journey</span>
+        <h2 class="text-3xl font-extrabold font-display tracking-tight text-zinc-900 dark:text-white mt-2">Milestones</h2>
+      </div>
+
+      <div class="relative border-l-2 border-teal-500/20 pl-8 ml-4 flex flex-col gap-10">
+        <!-- Item 1 -->
+        <div class="relative reveal">
+          <div class="absolute -left-[39px] top-1.5 w-4 h-4 rounded-full bg-teal-600 border-4 border-white dark:border-zinc-900 shadow"></div>
+          <div class="text-xs font-bold text-teal-600">2004</div>
+          <h4 class="text-lg font-bold text-zinc-850 dark:text-zinc-200 mt-1 mb-2">The Beginning</h4>
+          <p class="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">Dr. Chatterji began his clinical practice with a vision to provide world-class physiotherapy in India.</p>
+        </div>
+        
+        <!-- Item 2 -->
+        <div class="relative reveal">
+          <div class="absolute -left-[39px] top-1.5 w-4 h-4 rounded-full bg-teal-600 border-4 border-white dark:border-zinc-900 shadow"></div>
+          <div class="text-xs font-bold text-teal-600">2010</div>
+          <h4 class="text-lg font-bold text-zinc-850 dark:text-zinc-200 mt-1 mb-2">Physio Care Founded</h4>
+          <p class="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">The clinic was established as a specialized center focusing on spine care and sports rehabilitation.</p>
+        </div>
+        
+        <!-- Item 3 -->
+        <div class="relative reveal">
+          <div class="absolute -left-[39px] top-1.5 w-4 h-4 rounded-full bg-teal-600 border-4 border-white dark:border-zinc-900 shadow"></div>
+          <div class="text-xs font-bold text-teal-600">2018</div>
+          <h4 class="text-lg font-bold text-zinc-850 dark:text-zinc-200 mt-1 mb-2">Tele-Rehab Pioneer</h4>
+          <p class="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">Became one of the first clinics in the region to offer comprehensive tele-rehabilitation services.</p>
+        </div>
+        
+        <!-- Item 4 -->
+        <div class="relative reveal">
+          <div class="absolute -left-[39px] top-1.5 w-4 h-4 rounded-full bg-teal-600 border-4 border-white dark:border-zinc-900 shadow"></div>
+          <div class="text-xs font-bold text-teal-600">2024</div>
+          <h4 class="text-lg font-bold text-zinc-850 dark:text-zinc-200 mt-1 mb-2">5000+ Lives Changed</h4>
+          <p class="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">Crossed the milestone of treating 5000+ patients across 15+ countries worldwide.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-20 px-6 sm:px-8 bg-zinc-50 dark:bg-zinc-900/40 border-t border-zinc-150 dark:border-zinc-850">
+    <div class="max-w-4xl mx-auto p-8 sm:p-12 rounded-[2rem] bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 shadow-xl text-center reveal-scale">
+      <span class="text-xs font-bold uppercase tracking-[0.25em] text-teal-600">Meet the Team</span>
+      <h2 class="text-2xl sm:text-3xl font-extrabold font-display tracking-tight text-zinc-900 dark:text-white mt-2 mb-4">Want to Know Who's Behind Your Care?</h2>
+      <p class="text-sm text-zinc-500 dark:text-zinc-400 max-w-lg mx-auto mb-8">
+        Meet our team of specialized physiotherapists dedicated to your recovery.
+      </p>
+      <a href="{% url 'core:team' %}" class="inline-flex items-center gap-2 px-8 py-3.5 bg-teal-600 hover:bg-teal-500 text-white font-bold rounded-xl shadow-lg active:scale-[0.98] transition-all" data-magnetic>
+        Our Team <span class="material-symbols-rounded text-lg">arrow_forward</span>
+      </a>
+    </div>
+  </section>
+  
+</main>
+{% endblock %}

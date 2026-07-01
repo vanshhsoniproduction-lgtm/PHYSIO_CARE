@@ -1,0 +1,78 @@
+{% extends "core/base.html" %}
+
+{% block title %}Our Services | Physio Care{% endblock %}
+{% block meta_desc %}Explore our specialized physiotherapy services: Spine Care, Sports Rehabilitation, Geriatric Care, and Pain Solutions.{% endblock %}
+
+{% block content %}
+<main class="relative overflow-hidden">
+  
+  <!-- Hero Section -->
+  <section class="pt-32 pb-16 px-6 sm:px-8">
+    <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-teal-500/5 rounded-full blur-[100px] pointer-events-none"></div>
+    <div class="max-w-7xl mx-auto w-full">
+      
+      <div class="text-center max-w-2xl mx-auto mb-16 reveal">
+        <span class="text-xs font-bold uppercase tracking-[0.2em] text-teal-600">Our Specializations</span>
+        <h1 class="text-3xl sm:text-5xl font-extrabold font-display tracking-tight text-zinc-900 dark:text-white mt-2 mb-4">Services We Offer</h1>
+        <p class="text-zinc-500 dark:text-zinc-400">
+          Comprehensive physiotherapy programs built on 20+ years of evidence-based practice, delivered in-clinic or via tele-rehabilitation worldwide.
+        </p>
+      </div>
+
+      <!-- Services Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 stagger-children">
+        {% for slug, svc in services.items %}
+        <a href="#" class="relative p-10 bg-white dark:bg-zinc-900 rounded-[2rem] border border-zinc-150 dark:border-zinc-800 hover:shadow-2xl hover:translate-y-[-6px] transition-all duration-300 flex flex-col items-start gap-6 group reveal" data-tilt
+           {% if slug == 'spine-care' %}
+             data-href="{% url 'core:service-spine' %}"
+           {% elif slug == 'sports-rehab' %}
+             data-href="{% url 'core:service-sports' %}"
+           {% elif slug == 'geriatric-care' %}
+             data-href="{% url 'core:service-geriatric' %}"
+           {% elif slug == 'pain-solutions' %}
+             data-href="{% url 'core:service-pain' %}"
+           {% endif %}
+           onclick="if(this.dataset.href) window.location=this.dataset.href; return false;"
+        >
+          <div class="absolute inset-x-0 top-0 h-1 rounded-t-[2rem]" style="background: linear-gradient(90deg, {{ svc.color }}, transparent);"></div>
+          
+          <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-white group-hover:scale-110 transition-transform" style="background: {{ svc.color }};">
+            <span class="material-symbols-rounded text-3xl">{{ svc.icon }}</span>
+          </div>
+          
+          <div>
+            <h3 class="text-xl font-bold font-display text-zinc-800 dark:text-zinc-100 mb-1">{{ svc.title }}</h3>
+            <div class="text-[10px] font-bold uppercase tracking-widest" style="color: {{ svc.color }};">{{ svc.subtitle }}</div>
+          </div>
+          
+          <p class="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">{{ svc.hero_desc }}</p>
+          
+          <div class="flex flex-wrap gap-2 mt-2">
+            {% for condition in svc.conditions|slice:":4" %}
+              <span class="px-3 py-1 bg-zinc-50 dark:bg-zinc-850 border border-zinc-100 dark:border-zinc-800 text-[10px] font-bold text-zinc-500 dark:text-zinc-400 rounded-full">{{ condition }}</span>
+            {% endfor %}
+          </div>
+          
+          <div class="flex items-center gap-2 font-display text-xs font-bold text-teal-600 mt-auto pt-6 group-hover:gap-4 transition-all">
+            Learn More <span class="material-symbols-rounded text-sm">arrow_forward</span>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+
+      <!-- CTA Banner -->
+      <div class="mt-20 p-8 sm:p-12 bg-gradient-to-r from-teal-600 to-teal-800 rounded-3xl text-center text-white relative overflow-hidden reveal">
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] animate-[shimmer_4s_infinite]"></div>
+        <h3 class="text-xl sm:text-2xl font-extrabold font-display mb-2 relative z-10">Not Sure Which Service You Need?</h3>
+        <p class="text-sm text-white/80 max-w-md mx-auto mb-8 relative z-10">Book a consultation and our expert team will guide you to the right treatment plan.</p>
+        <a href="{% if user.is_authenticated %}{% url 'appointments:home' %}{% else %}{% url 'accounts:auth' %}{% endif %}" class="inline-flex items-center gap-2 px-8 py-3.5 bg-white text-teal-800 font-bold rounded-xl shadow-lg hover:shadow-xl hover:translate-y-[-2px] transition-all relative z-10">
+          <span class="material-symbols-rounded text-lg">calendar_month</span>
+          Book Free Consultation
+        </a>
+      </div>
+      
+    </div>
+  </section>
+
+</main>
+{% endblock %}
