@@ -140,23 +140,6 @@ def landing_page(request):
     return render(request, "core/landing.html", {
         'reviews': reviews,
         'services': SERVICES,
-    })
-
-
-def home_page(request):
-    reviews = Review.objects.filter(is_approved=True).order_by('-created_at')[:5]
-    return render(request, "core/home.html", {
-        'reviews': reviews,
-        'services': SERVICES,
-        'force_dark': True,
-    })
-
-
-def home_page_2(request):
-    reviews = Review.objects.filter(is_approved=True).order_by('-created_at')[:5]
-    return render(request, "core/home2.html", {
-        'reviews': reviews,
-        'services': SERVICES,
         'force_dark': True,
         'is_home2': True,
     })
