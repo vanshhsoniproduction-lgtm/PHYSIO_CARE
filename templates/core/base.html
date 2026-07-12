@@ -59,6 +59,19 @@
     </script>
 
     <style>
+      /* Premium Frosted Grey Glass styles */
+      .frosted-glass-card {
+        background: rgba(45, 45, 45, 0.45);
+        backdrop-filter: blur(24px) saturate(190%);
+        -webkit-backdrop-filter: blur(24px) saturate(190%);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        /* Force hardware acceleration to prevent compositing redraws on scroll */
+        transform: translate3d(0, 0, 0);
+        will-change: transform;
+        backface-visibility: hidden;
+      }
+
       /* Custom Keyframe Animations (not natively covered by standard utility classes) */
       @keyframes morphBlob {
         0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
@@ -117,33 +130,82 @@
       .stagger-children .reveal:nth-child(3) { transition-delay: 0.19s; }
       .stagger-children .reveal:nth-child(4) { transition-delay: 0.26s; }
 
-      /* Splash Screen */
+      /* ====== Premium Frosted Splash Screen ====== */
       #splash-screen {
         position: fixed;
         inset: 0;
         z-index: 9999;
-        background: radial-gradient(ellipse at center, #0d9488, #065f56 70%, #022c22);
+        background: rgba(8, 8, 8, 0.92);
+        backdrop-filter: blur(40px) saturate(180%);
+        -webkit-backdrop-filter: blur(40px) saturate(180%);
         display: flex;
         align-items: center;
         justify-content: center;
         flex-direction: column;
-        transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.2, 0, 0, 1);
+        transition: opacity 0.8s cubic-bezier(0.2, 0, 0, 1), transform 0.8s cubic-bezier(0.2, 0, 0, 1);
       }
       #splash-screen.splash-exit {
         opacity: 0;
-        transform: scale(2.5);
+        transform: scale(1.12);
         pointer-events: none;
       }
+      #splash-logo-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
       #splash-logo {
-        width: 100px;
+        width: 90px;
         height: auto;
-        animation: splash-pulse 1.2s ease-in-out infinite;
+        position: relative;
+        z-index: 2;
+        filter: drop-shadow(0 0 20px rgba(13, 148, 136, 0.4));
+        animation: splash-breathe 2s ease-in-out infinite;
       }
-      @keyframes splash-pulse {
-        0%, 100% { transform: scale(1); filter: brightness(1); }
-        50% { transform: scale(1.08); filter: brightness(1.2); }
+      /* Glow Ring */
+      #splash-logo-wrap::before {
+        content: '';
+        position: absolute;
+        width: 130px;
+        height: 130px;
+        border-radius: 50%;
+        border: 2px solid rgba(13, 148, 136, 0.3);
+        animation: splash-ring 2s ease-in-out infinite;
+        z-index: 1;
       }
-      
+      #splash-logo-wrap::after {
+        content: '';
+        position: absolute;
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        border: 1px solid rgba(13, 148, 136, 0.12);
+        animation: splash-ring 2s ease-in-out infinite 0.3s;
+        z-index: 0;
+      }
+      @keyframes splash-breathe {
+        0%, 100% { transform: scale(1); filter: drop-shadow(0 0 20px rgba(13, 148, 136, 0.4)); }
+        50% { transform: scale(1.06); filter: drop-shadow(0 0 35px rgba(13, 148, 136, 0.6)); }
+      }
+      @keyframes splash-ring {
+        0%, 100% { transform: scale(1); opacity: 0.5; }
+        50% { transform: scale(1.15); opacity: 0.15; }
+      }
+      /* Shimmer Text */
+      .splash-text {
+        background: linear-gradient(90deg, rgba(255,255,255,0.6), rgba(255,255,255,1), rgba(255,255,255,0.6));
+        background-size: 200% 100%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: splash-shimmer 2.5s ease-in-out infinite;
+      }
+      @keyframes splash-shimmer {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+      }
+
       /* Utilities */
       .no-scrollbar::-webkit-scrollbar { display: none; }
       .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -154,9 +216,21 @@
     
     <!-- SPLASH SCREEN -->
     <div id="splash-screen">
-      <img id="splash-logo" src="/media/logo_single.png" alt="Physio Care" />
-      <div class="mt-4 font-display text-2xl font-bold text-white tracking-widest opacity-90">Physio Care</div>
+      <div id="splash-logo-wrap">
+        <img id="splash-logo" src="/media/logo_single.png" alt="Physio Care" />
+      </div>
+      <div class="mt-6 font-display text-2xl font-bold tracking-widest splash-text">Physio Care</div>
+      <div class="mt-2 text-[10px] font-bold uppercase tracking-[0.3em] text-zinc-500">Restore · Reclaim · Recover</div>
     </div>
+
+    {% if is_home2 %}
+    <!-- CENTRALIZED SCROLL-CONTROLLED BACKGROUND VIDEO -->
+    <div class="fixed inset-0 w-full h-full z-0 overflow-hidden pointer-events-none" style="transform: translate3d(0,0,0); will-change: transform;">
+      <video id="scroll-bg-video" muted playsinline preload="auto" class="w-full h-full object-cover opacity-[0.38]" style="transform: translate3d(0,0,0); will-change: transform; backface-visibility: hidden;">
+        <source src="/media/bg_home.mp4" type="video/mp4">
+      </video>
+    </div>
+    {% endif %}
 
     <!-- Page Content Wrapper -->
     <div class="opacity-0 transition-opacity duration-700 ease-out page-content" id="page-content">
@@ -317,7 +391,7 @@
           <!-- Brand Column -->
           <div class="flex flex-col gap-6">
             <a href="{% url 'core:landing-page' %}">
-              <img src="/media/LOGO.png" alt="Physio Care Logo" class="h-16 w-auto object-contain object-left hover:scale-[1.02] transition-transform duration-300" />
+              <img src="/media/LOGO.png" alt="Physio Care Logo" class="h-20 w-auto max-w-[240px] object-contain object-left hover:scale-[1.02] transition-transform duration-300" />
             </a>
             <p class="text-sm leading-relaxed text-zinc-400 max-w-sm">
               Expert restoration care by <strong class="text-zinc-200 font-medium">Dr. Bhubon Chatterji</strong>. Providing world-class physiotherapy globally via tele-rehab and in-person sessions.
@@ -373,21 +447,131 @@
     <!-- BASE SCRIPTS -->
     <script>
       // ============================================
-      // SPLASH SCREEN
-      // home2 overrides this with video-ready logic
+      // SPLASH SCREEN — Unified for all pages
+      // On is_home2 pages, splash waits for video ready
+      // On other pages, simple timer-based dismiss
       // ============================================
-      window.addEventListener('load', () => {
-        // If home2 video splash is active, skip default timer-based dismiss
-        if (window.__home2VideoSplash) return;
+      (function() {
         const splash = document.getElementById('splash-screen');
         const pageContent = document.getElementById('page-content');
-        setTimeout(() => {
+        let splashDismissed = false;
+
+        function dismissSplash() {
+          if (splashDismissed) return;
+          splashDismissed = true;
+          if (!splash || !pageContent) return;
           splash.classList.add('splash-exit');
           pageContent.classList.remove('opacity-0');
           pageContent.classList.add('opacity-100');
-          setTimeout(() => splash.remove(), 700);
-        }, 800);
-      });
+          setTimeout(() => splash.remove(), 900);
+        }
+
+        // Safety fallback — always dismiss after 3.5s max
+        setTimeout(dismissSplash, 3500);
+
+        {% if is_home2 %}
+        // ============================================
+        // OPTIMIZED SCROLL-CONTROLLED VIDEO ENGINE
+        // Uses requestVideoFrameCallback for GPU-synced seeking
+        // with requestAnimationFrame fallback
+        // ============================================
+        const video = document.getElementById('scroll-bg-video');
+        if (video) {
+          let videoReady = false;
+          let targetTime = 0;
+          let currentTime = 0;
+
+          // Prime the video (required for mobile browsers)
+          function primeVideo() {
+            video.play().then(() => {
+              video.pause();
+              video.currentTime = 0;
+              videoReady = true;
+              dismissSplash();
+            }).catch(() => {
+              videoReady = true;
+              dismissSplash();
+            });
+          }
+
+          // Dismiss splash when video is playable
+          video.addEventListener('canplaythrough', function f() {
+            video.removeEventListener('canplaythrough', f);
+            dismissSplash();
+          });
+
+          // Scroll → target time mapping (linear: scroll% = video%)
+          let scrollIdleTimer = null;
+          const hasFastSeek = typeof video.fastSeek === 'function';
+
+          function updateTargetTime() {
+            const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+            if (scrollHeight <= 0 || !video.duration) return;
+            const scrollY = window.scrollY || window.pageYOffset || 0;
+            const scrollPercent = Math.max(0, Math.min(1, scrollY / scrollHeight));
+            targetTime = scrollPercent * (video.duration - 0.2);
+
+            // Schedule a precise seek after scrolling stops (200ms idle)
+            clearTimeout(scrollIdleTimer);
+            scrollIdleTimer = setTimeout(function() {
+              if (videoReady && video.duration && !video.seeking) {
+                const t = Math.max(0, Math.min(video.duration - 0.2, targetTime));
+                try { video.currentTime = t; } catch(e) {}
+              }
+            }, 200);
+          }
+
+          // Smooth interpolation loop — lerps toward targetTime using actual video.currentTime as base
+          function animLoop() {
+            if (videoReady && video.duration && !video.seeking) {
+              const diff = targetTime - video.currentTime;
+              if (Math.abs(diff) > 0.01) {
+                // If diff is tiny, snap to it, otherwise step towards it
+                const step = Math.abs(diff) < 0.04 ? diff : diff * 0.25;
+                const t = Math.max(0, Math.min(video.duration - 0.2, video.currentTime + step));
+                try {
+                  video.currentTime = t;
+                } catch(e) {}
+              }
+            }
+            requestAnimationFrame(animLoop);
+          }
+
+          // Listeners
+          window.addEventListener('scroll', updateTargetTime, { passive: true });
+          window.addEventListener('touchmove', updateTargetTime, { passive: true });
+          window.addEventListener('resize', updateTargetTime, { passive: true });
+
+          // Init
+          function initVideo() {
+            primeVideo();
+            // Start the animation loop
+            requestAnimationFrame(animLoop);
+          }
+
+          if (video.readyState >= 2) {
+            initVideo();
+          } else {
+            video.addEventListener('loadeddata', initVideo, { once: true });
+          }
+
+          // Re-sync on tab return
+          document.addEventListener('visibilitychange', function() {
+            if (!document.hidden && video.duration) {
+              updateTargetTime();
+              currentTime = targetTime;
+              try { video.currentTime = Math.max(0, Math.min(video.duration - 0.2, currentTime)); } catch(e) {}
+            }
+          });
+        } else {
+          // No video element — just dismiss splash
+          window.addEventListener('load', () => setTimeout(dismissSplash, 600));
+        }
+        {% else %}
+        // Non-video pages: simple dismiss
+        window.addEventListener('load', () => setTimeout(dismissSplash, 600));
+        {% endif %}
+      })();
 
       // ============================================
       // DARK MODE

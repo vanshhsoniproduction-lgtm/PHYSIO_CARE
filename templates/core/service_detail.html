@@ -4,7 +4,8 @@
 {% block meta_desc %}{{ service.hero_desc }}{% endblock %}
 
 {% block content %}
-<main class="relative overflow-hidden">
+
+<main class="relative z-10 bg-transparent text-zinc-100">
   
   <!-- Hero Section -->
   <section class="pt-32 pb-16 px-6 sm:px-8">
@@ -17,18 +18,18 @@
       </div>
       
       <div>
-        <span class="text-xs font-bold uppercase tracking-[0.25em]" style="color: {{ service.color }};">{{ service.subtitle }}</span>
-        <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold font-display tracking-tight text-zinc-900 dark:text-white mt-2">{{ service.title }}</h1>
+        <span class="text-xs font-black uppercase tracking-[0.25em]" style="color: {{ service.color }};">{{ service.subtitle }}</span>
+        <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black font-display tracking-tight text-white mt-2">{{ service.title }}</h1>
       </div>
       
-      <p class="text-base sm:text-lg text-zinc-500 dark:text-zinc-400 max-w-2xl leading-relaxed">{{ service.hero_desc }}</p>
+      <p class="text-base sm:text-lg text-zinc-300 font-semibold max-w-2xl leading-relaxed">{{ service.hero_desc }}</p>
       
       <div class="flex flex-wrap gap-4 mt-4">
-        <a href="{% if user.is_authenticated %}{% url 'appointments:home' %}{% else %}{% url 'accounts:auth' %}{% endif %}" class="inline-flex items-center gap-2 px-8 py-3.5 bg-teal-600 hover:bg-teal-500 text-white font-bold rounded-xl shadow-lg active:scale-[0.98] transition-all" data-magnetic>
+        <a href="{% if user.is_authenticated %}{% url 'appointments:home' %}{% else %}{% url 'accounts:auth' %}{% endif %}" class="inline-flex items-center gap-2 px-8 py-3.5 bg-teal-600 hover:bg-teal-500 text-white font-black rounded-2xl shadow-lg shadow-teal-600/20 active:scale-[0.98] transition-all duration-200" data-magnetic>
           Book Consultation
           <span class="material-symbols-rounded text-lg">arrow_forward</span>
         </a>
-        <a href="{% url 'core:services' %}" class="inline-flex items-center gap-2 px-8 py-3.5 border border-zinc-200 dark:border-zinc-800 hover:text-teal-600 rounded-xl font-bold transition-all">
+        <a href="{% url 'core:services' %}" class="inline-flex items-center gap-2 px-8 py-3.5 border-2 border-zinc-850 hover:border-teal-500 hover:text-teal-400 rounded-2xl font-black transition-all">
           <span class="material-symbols-rounded text-lg">arrow_back</span>
           All Services
         </a>
@@ -37,32 +38,32 @@
   </section>
 
   <!-- Overview & Benefits Section -->
-  <section class="py-20 bg-zinc-50 dark:bg-zinc-900/40 px-6 sm:px-8 border-y border-zinc-100 dark:border-zinc-800">
+  <section class="py-20 bg-transparent px-6 sm:px-8 border-y border-white/10">
     <div class="max-w-7xl mx-auto">
       <div class="reveal mb-12">
-        <span class="text-xs font-bold uppercase tracking-[0.2em] text-teal-600">Overview</span>
-        <p class="text-zinc-650 dark:text-zinc-300 text-sm sm:text-base leading-relaxed max-w-3xl mt-2">{{ service.overview }}</p>
+        <span class="text-xs font-black uppercase tracking-[0.2em] text-teal-400 font-display">Overview</span>
+        <p class="text-zinc-300 font-semibold text-sm sm:text-base leading-relaxed max-w-3xl mt-2">{{ service.overview }}</p>
       </div>
 
       <!-- Benefits Cards Grid -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 stagger-children">
         {% for benefit in service.benefits %}
-        <div class="p-8 bg-white dark:bg-zinc-900 rounded-3xl border border-zinc-100 dark:border-zinc-800 hover:shadow-xl hover:translate-y-[-4px] transition-all duration-300 reveal text-center group" data-tilt>
+        <div class="p-8 frosted-glass-card rounded-3xl hover:shadow-xl hover:translate-y-[-4px] transition-all duration-300 reveal text-center group" data-tilt>
           <div class="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-all duration-300" style="background: {{ service.color_light }}; color: {{ service.color }};">
             <span class="material-symbols-rounded text-xl">{{ benefit.icon }}</span>
           </div>
-          <h4 class="text-sm font-bold text-zinc-800 dark:text-zinc-200 mb-2">{{ benefit.title }}</h4>
-          <p class="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">{{ benefit.desc }}</p>
+          <h4 class="text-sm font-black text-white mb-2 font-display">{{ benefit.title }}</h4>
+          <p class="text-xs text-zinc-350 font-semibold leading-relaxed">{{ benefit.desc }}</p>
         </div>
         {% endfor %}
       </div>
 
       <!-- Conditions List -->
       <div class="mt-16 reveal">
-        <span class="text-xs font-bold uppercase tracking-[0.2em] text-teal-600">Conditions We Treat</span>
+        <span class="text-xs font-black uppercase tracking-[0.2em] text-teal-400 font-display">Conditions We Treat</span>
         <div class="flex flex-wrap gap-3 mt-6">
           {% for condition in service.conditions %}
-          <div class="flex items-center gap-2 px-5 py-3 bg-white dark:bg-zinc-900 border border-zinc-150 dark:border-zinc-800 text-xs font-bold text-zinc-500 dark:text-zinc-400 rounded-full hover:border-teal-600 hover:text-teal-600 dark:hover:text-teal-400 transition-all hover:translate-y-[-1px]">
+          <div class="flex items-center gap-2 px-5 py-3 bg-white/5 border border-white/10 text-xs font-bold text-zinc-300 rounded-full hover:border-teal-600 hover:text-teal-650 dark:hover:text-teal-400 transition-all hover:translate-y-[-1px]">
             <span class="material-symbols-rounded text-sm" style="color: {{ service.color }}; font-variation-settings: 'FILL' 1;">check_circle</span>
             {{ condition }}
           </div>
@@ -74,20 +75,20 @@
   </section>
 
   <!-- Treatment Process Section -->
-  <section class="py-20 bg-zinc-950 text-white px-6 sm:px-8">
+  <section class="py-20 bg-transparent text-white px-6 sm:px-8">
     <div class="max-w-7xl mx-auto">
       <div class="text-center max-w-2xl mx-auto mb-16 reveal">
-        <span class="text-xs font-bold uppercase tracking-[0.2em] text-teal-400">Treatment Journey</span>
-        <h2 class="text-3xl font-extrabold font-display tracking-tight text-white mt-2 mb-4">Your Path to Recovery</h2>
-        <p class="text-sm text-zinc-400">A structured, step-by-step approach to ensure comprehensive and lasting results.</p>
+        <span class="text-xs font-black uppercase tracking-[0.2em] text-teal-400 font-display">Treatment Journey</span>
+        <h2 class="text-3xl font-black font-display tracking-tight text-white mt-2 mb-4">Your Path to Recovery</h2>
+        <p class="text-sm text-zinc-300 font-semibold">A structured, step-by-step approach to ensure comprehensive and lasting results.</p>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 stagger-children">
         {% for step in service.process %}
-        <div class="relative p-8 bg-white/5 border border-white/5 rounded-3xl hover:bg-white/[0.07] hover:border-white/10 hover:translate-y-[-4px] transition-all duration-300 reveal flex flex-col items-start gap-4">
-          <div class="text-4xl font-extrabold font-display leading-none" style="color: {{ service.color }}; opacity: 0.6;">{{ step.step }}</div>
-          <h4 class="text-base font-bold text-white">{{ step.title }}</h4>
-          <p class="text-xs text-zinc-400 leading-relaxed">{{ step.desc }}</p>
+        <div class="relative p-8 frosted-glass-card rounded-3xl hover:border-white/20 hover:translate-y-[-4px] transition-all duration-300 reveal flex flex-col items-start gap-4">
+          <div class="text-4xl font-black font-display leading-none" style="color: {{ service.color }}; opacity: 0.6;">{{ step.step }}</div>
+          <h4 class="text-base font-black text-white font-display">{{ step.title }}</h4>
+          <p class="text-xs text-zinc-350 font-semibold leading-relaxed">{{ step.desc }}</p>
         </div>
         {% endfor %}
       </div>
@@ -96,12 +97,12 @@
 
   <!-- CTA Banner Section -->
   <section class="py-20 px-6 sm:px-8">
-    <div class="max-w-4xl mx-auto p-8 sm:p-16 rounded-[2.5rem] bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 shadow-xl text-center relative overflow-hidden reveal-scale">
-      <span class="text-xs font-bold uppercase tracking-[0.25em] text-teal-600 font-display">Ready to Start?</span>
-      <h2 class="text-2xl sm:text-4xl font-extrabold font-display tracking-tight text-zinc-900 dark:text-white mt-2 mb-4">Begin Your {{ service.title }} Journey</h2>
-      <p class="text-sm text-zinc-500 dark:text-zinc-400 max-w-lg mx-auto mb-8">Schedule a consultation with our specialists and take the first step toward recovery.</p>
+    <div class="max-w-4xl mx-auto p-8 sm:p-16 rounded-[2.5rem] frosted-glass-card shadow-xl text-center relative overflow-hidden reveal-scale">
+      <span class="text-xs font-black uppercase tracking-[0.25em] text-teal-400 font-display">Ready to Start?</span>
+      <h2 class="text-2xl sm:text-4xl font-black font-display tracking-tight text-white mt-2 mb-4">Begin Your {{ service.title }} Journey</h2>
+      <p class="text-sm text-zinc-350 font-semibold max-w-lg mx-auto mb-8">Schedule a consultation with our specialists and take the first step toward recovery.</p>
       
-      <a href="{% if user.is_authenticated %}{% url 'appointments:home' %}{% else %}{% url 'accounts:auth' %}{% endif %}" class="inline-flex items-center gap-2 px-10 py-4 bg-teal-600 hover:bg-teal-500 text-white font-bold rounded-2xl shadow-lg active:scale-[0.98] transition-all" data-magnetic>
+      <a href="{% if user.is_authenticated %}{% url 'appointments:home' %}{% else %}{% url 'accounts:auth' %}{% endif %}" class="inline-flex items-center gap-2 px-10 py-4 bg-teal-600 hover:bg-teal-500 text-white font-black rounded-2xl shadow-lg shadow-teal-600/20 active:scale-[0.98] transition-all duration-200" data-magnetic>
         Book Appointment
         <span class="material-symbols-rounded text-lg">arrow_forward</span>
       </a>
@@ -110,3 +111,5 @@
 
 </main>
 {% endblock %}
+
+

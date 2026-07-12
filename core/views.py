@@ -148,6 +148,8 @@ def landing_page(request):
 def services_page(request):
     return render(request, "core/services.html", {
         'services': SERVICES,
+        'force_dark': True,
+        'is_home2': True,
     })
 
 
@@ -160,20 +162,29 @@ def service_detail(request, slug):
         'service': service,
         'slug': slug,
         'all_services': SERVICES,
+        'force_dark': True,
+        'is_home2': True,
     })
 
 
 def about_page(request):
     return render(request, "core/about.html", {
         'lead_doctor': TEAM_MEMBERS[0],
+        'force_dark': True,
+        'is_home2': True,
     })
 
 
 def team_page(request):
     return render(request, "core/team.html", {
         'team_members': TEAM_MEMBERS,
+        'force_dark': True,
+        'is_home2': True,
     })
 
 
 def contact_page(request):
-    return render(request, "core/contact.html")
+    return render(request, "core/contact.html", {
+        'force_dark': True,
+        'is_home2': True,
+    })
