@@ -150,6 +150,7 @@ def services_page(request):
         'services': SERVICES,
         'force_dark': True,
         'is_home2': True,
+        'bg_video_url': '/media/bg_contact.mp4',
     })
 
 
@@ -158,13 +159,19 @@ def service_detail(request, slug):
     if not service:
         from django.http import Http404
         raise Http404("Service not found")
-    return render(request, "core/service_detail.html", {
+    
+    context = {
         'service': service,
         'slug': slug,
         'all_services': SERVICES,
         'force_dark': True,
         'is_home2': True,
-    })
+    }
+    
+    if slug == 'sports-rehab':
+        context['bg_video_url'] = '/media/bg_service2.mp4'
+        
+    return render(request, "core/service_detail.html", context)
 
 
 def about_page(request):
@@ -187,4 +194,5 @@ def contact_page(request):
     return render(request, "core/contact.html", {
         'force_dark': True,
         'is_home2': True,
+        'bg_video_url': '/media/bg_contact.mp4',
     })

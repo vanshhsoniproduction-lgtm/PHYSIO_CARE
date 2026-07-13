@@ -227,7 +227,7 @@
     <!-- CENTRALIZED SCROLL-CONTROLLED BACKGROUND VIDEO -->
     <div class="fixed inset-0 w-full h-full z-0 overflow-hidden pointer-events-none" style="transform: translate3d(0,0,0); will-change: transform;">
       <video id="scroll-bg-video" muted playsinline preload="auto" class="w-full h-full object-cover opacity-[0.38]" style="transform: translate3d(0,0,0); will-change: transform; backface-visibility: hidden;">
-        <source src="/media/bg_home.mp4" type="video/mp4">
+        <source src="{% if bg_video_url %}{{ bg_video_url }}{% else %}/media/bg_home.mp4{% endif %}" type="video/mp4">
       </video>
     </div>
     {% endif %}

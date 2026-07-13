@@ -5,77 +5,157 @@
 
 {% block content %}
 
-<main class="relative z-10 bg-transparent text-zinc-150">
+<!-- Spacer to allow scrolling -->
+<div class="h-[300vh] w-full bg-transparent relative">
   
-  <!-- Hero Section -->
-  <section class="pt-32 pb-16 px-6 sm:px-8">
-    <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-teal-500/5 rounded-full blur-[100px] pointer-events-none"></div>
-    <div class="max-w-7xl mx-auto w-full">
+  <!-- Left Aligned Sticky Header -->
+  <div id="sticky-header" class="fixed top-32 left-6 sm:left-8 max-w-xl z-25 pointer-events-none transition-all duration-500 transform">
+    <div class="pointer-events-auto space-y-3">
+      <span class="text-xs font-black uppercase tracking-[0.2em] text-teal-400 font-display">Our Specializations</span>
+      <h1 class="text-4xl sm:text-6xl font-black font-display tracking-tight text-white leading-none">Services</h1>
+      <p class="text-zinc-300 font-semibold text-sm sm:text-base leading-relaxed mt-2 max-w-md">
+        Scroll down to explore our specialized recovery programs one by one.
+      </p>
       
-      <div class="text-center max-w-2xl mx-auto mb-16 reveal">
-        <span class="text-xs font-black uppercase tracking-[0.2em] text-teal-400 font-display">Our Specializations</span>
-        <h1 class="text-3xl sm:text-5xl font-black font-display tracking-tight text-white mt-2 mb-4">Services We Offer</h1>
-        <p class="text-zinc-300 font-semibold">
-          Comprehensive physiotherapy programs built on 20+ years of evidence-based practice, delivered in-clinic or via tele-rehabilitation worldwide.
-        </p>
+      <!-- Scroll Indicator Dots -->
+      <div id="scroll-dots-container" class="flex items-center gap-2 pt-4 transition-all duration-500">
+        <span class="service-dot w-8 h-1.5 rounded-full bg-teal-500 transition-all duration-300" data-index="0"></span>
+        <span class="service-dot w-2 h-1.5 rounded-full bg-white/20 transition-all duration-300" data-index="1"></span>
+        <span class="service-dot w-2 h-1.5 rounded-full bg-white/20 transition-all duration-300" data-index="2"></span>
+        <span class="service-dot w-2 h-1.5 rounded-full bg-white/20 transition-all duration-300" data-index="3"></span>
       </div>
-
-      <!-- Services Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 stagger-children">
-        {% for slug, svc in services.items %}
-        <a href="#" class="relative p-10 frosted-glass-card rounded-[2rem] hover:shadow-2xl hover:translate-y-[-6px] transition-all duration-300 flex flex-col items-start gap-6 group reveal" data-tilt
-           {% if slug == 'spine-care' %}
-             data-href="{% url 'core:service-spine' %}"
-           {% elif slug == 'sports-rehab' %}
-             data-href="{% url 'core:service-sports' %}"
-           {% elif slug == 'geriatric-care' %}
-             data-href="{% url 'core:service-geriatric' %}"
-           {% elif slug == 'pain-solutions' %}
-             data-href="{% url 'core:service-pain' %}"
-           {% endif %}
-           onclick="if(this.dataset.href) window.location=this.dataset.href; return false;"
-        >
-          <div class="absolute inset-x-0 top-0 h-1 rounded-t-[2rem]" style="background: linear-gradient(90deg, {{ svc.color }}, transparent);"></div>
-          
-          <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-white group-hover:scale-110 transition-transform" style="background: {{ svc.color }};">
-            <span class="material-symbols-rounded text-3xl">{{ svc.icon }}</span>
-          </div>
-          
-          <div>
-            <h3 class="text-xl font-black font-display text-white mb-1">{{ svc.title }}</h3>
-            <div class="text-[10px] font-black uppercase tracking-widest" style="color: {{ svc.color }};">{{ svc.subtitle }}</div>
-          </div>
-          
-          <p class="text-xs text-zinc-350 font-semibold leading-relaxed">{{ svc.hero_desc }}</p>
-          
-          <div class="flex flex-wrap gap-2 mt-2">
-            {% for condition in svc.conditions|slice:":4" %}
-              <span class="px-3 py-1 bg-white/5 border border-white/10 text-[10px] font-bold text-zinc-300 rounded-full">{{ condition }}</span>
-            {% endfor %}
-          </div>
-          
-          <div class="flex items-center gap-2 font-display text-xs font-black text-teal-400 mt-auto pt-6 group-hover:gap-4 transition-all">
-            Learn More <span class="material-symbols-rounded text-sm">arrow_forward</span>
-          </div>
-        </a>
-        {% endfor %}
-      </div>
-
-      <!-- CTA Banner -->
-      <div class="mt-20 p-8 sm:p-12 frosted-glass-card rounded-3xl text-center text-white relative overflow-hidden reveal">
-        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] animate-[shimmer_4s_infinite]"></div>
-        <h3 class="text-xl sm:text-2xl font-black font-display mb-2 relative z-10">Not Sure Which Service You Need?</h3>
-        <p class="text-sm text-zinc-300 font-semibold max-w-md mx-auto mb-8 relative z-10">Book a consultation and our expert team will guide you to the right treatment plan.</p>
-        <a href="{% if user.is_authenticated %}{% url 'appointments:home' %}{% else %}{% url 'accounts:auth' %}{% endif %}" class="inline-flex items-center gap-2 px-8 py-3.5 bg-teal-600 hover:bg-teal-500 text-white font-black rounded-xl shadow-lg shadow-teal-600/20 active:scale-[0.98] transition-all relative z-10">
-          <span class="material-symbols-rounded text-lg">calendar_month</span>
-          Book Free Consultation
-        </a>
-      </div>
-      
     </div>
-  </section>
+  </div>
 
-</main>
+  <!-- Floating Cards Container at Bottom Left -->
+  <div id="floating-cards-container" class="fixed bottom-8 left-6 sm:left-8 max-w-md w-[calc(100%-3rem)] sm:w-96 z-30 pointer-events-none h-[360px] overflow-hidden transition-all duration-500 transform">
+    <div class="relative w-full h-full">
+      
+      {% for slug, svc in services.items %}
+      <!-- Service Card -->
+      <div id="service-card-{{ forloop.counter0 }}" 
+           class="service-scroll-card absolute bottom-0 left-0 w-full frosted-glass-card p-6 rounded-3xl transition-all duration-500 ease-out transform opacity-0 translate-x-[120%] pointer-events-none flex flex-col gap-4"
+           style="will-change: transform, opacity;"
+      >
+        <div class="absolute inset-x-0 top-0 h-1 rounded-t-3xl" style="background: linear-gradient(90deg, {{ svc.color }}, transparent);"></div>
+        
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white" style="background: {{ svc.color }};">
+            <span class="material-symbols-rounded text-xl">{{ svc.icon }}</span>
+          </div>
+          <div>
+            <h3 class="text-base font-black font-display text-white">{{ svc.title }}</h3>
+            <div class="text-[9px] font-black uppercase tracking-widest" style="color: {{ svc.color }};">{{ svc.subtitle }}</div>
+          </div>
+        </div>
+        
+        <p class="text-xs text-zinc-300 font-semibold leading-relaxed">{{ svc.hero_desc }}</p>
+        
+        <div class="flex flex-wrap gap-1.5 my-1">
+          {% for condition in svc.conditions|slice:":3" %}
+            <span class="px-2.5 py-0.5 bg-white/5 border border-white/10 text-[9px] font-bold text-zinc-300 rounded-full">{{ condition }}</span>
+          {% endfor %}
+        </div>
+        
+        <a 
+          {% if slug == 'spine-care' %}
+            href="{% url 'core:service-spine' %}"
+          {% elif slug == 'sports-rehab' %}
+            href="{% url 'core:service-sports' %}"
+          {% elif slug == 'geriatric-care' %}
+            href="{% url 'core:service-geriatric' %}"
+          {% elif slug == 'pain-solutions' %}
+            href="{% url 'core:service-pain' %}"
+          {% endif %}
+          class="pointer-events-auto inline-flex items-center gap-2 font-display text-xs font-black text-teal-400 mt-2 hover:gap-3 transition-all"
+        >
+          Explore Program <span class="material-symbols-rounded text-xs">arrow_forward</span>
+        </a>
+      </div>
+      {% endfor %}
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const cards = document.querySelectorAll('.service-scroll-card');
+    const dots = document.querySelectorAll('.service-dot');
+    const dotsContainer = document.getElementById('scroll-dots-container');
+    const header = document.getElementById('sticky-header');
+    const cardsContainer = document.getElementById('floating-cards-container');
+    
+    function handleScroll() {
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (scrollHeight <= 0) return;
+      const scrollY = window.scrollY || window.pageYOffset || 0;
+      const scrollPercent = Math.max(0, Math.min(1, scrollY / scrollHeight));
+
+      // 1. Cards Container & Dots Visibility (fades out at 80% scroll)
+      if (scrollPercent >= 0.80) {
+        // Fade out cards container
+        cardsContainer.classList.remove('opacity-100', 'scale-100');
+        cardsContainer.classList.add('opacity-0', 'scale-95');
+        
+        // Fade out dots container
+        dotsContainer.classList.remove('opacity-100');
+        dotsContainer.classList.add('opacity-0', 'pointer-events-none');
+
+        // Reset all card classes to off-screen left (so they slide left when disappearing)
+        cards.forEach((card) => {
+          card.classList.remove('opacity-100', 'translate-x-0', 'translate-x-[120%]', 'pointer-events-auto');
+          card.classList.add('opacity-0', '-translate-x-[120%]', 'pointer-events-none');
+        });
+      } else {
+        cardsContainer.classList.remove('opacity-0', 'scale-95');
+        cardsContainer.classList.add('opacity-100', 'scale-100');
+        
+        dotsContainer.classList.remove('opacity-0', 'pointer-events-none');
+        dotsContainer.classList.add('opacity-100');
+
+        const zones = 4;
+        let activeIndex = Math.floor((scrollPercent / 0.80) * zones);
+        if (activeIndex >= zones) activeIndex = zones - 1;
+
+        cards.forEach((card, index) => {
+          if (index === activeIndex) {
+            card.classList.remove('opacity-0', 'translate-x-[120%]', '-translate-x-[120%]', 'pointer-events-none');
+            card.classList.add('opacity-100', 'translate-x-0', 'pointer-events-auto');
+          } else if (index < activeIndex) {
+            card.classList.remove('opacity-100', 'translate-x-[120%]', 'translate-x-0', 'pointer-events-auto');
+            card.classList.add('opacity-0', '-translate-x-[120%]', 'pointer-events-none');
+          } else {
+            card.classList.remove('opacity-100', '-translate-x-[120%]', 'translate-x-0', 'pointer-events-auto');
+            card.classList.add('opacity-0', 'translate-x-[120%]', 'pointer-events-none');
+          }
+        });
+
+        dots.forEach((dot, index) => {
+          if (index === activeIndex) {
+            dot.classList.remove('bg-white/20', 'w-2');
+            dot.classList.add('bg-teal-500', 'w-8');
+          } else {
+            dot.classList.remove('bg-teal-500', 'w-8');
+            dot.classList.add('bg-white/20', 'w-2');
+          }
+        });
+      }
+
+      // 2. Header Visibility (fades out at 92% scroll)
+      if (scrollPercent >= 0.92) {
+        header.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
+        header.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+      } else {
+        header.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+        header.classList.add('opacity-100', 'scale-100', 'pointer-events-auto');
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    // Trigger once initially
+    handleScroll();
+  });
+</script>
 {% endblock %}
-
-
