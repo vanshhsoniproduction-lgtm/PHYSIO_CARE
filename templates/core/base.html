@@ -206,6 +206,29 @@
         100% { background-position: -200% 0; }
       }
 
+      /* Animated gradient fallback for mobile/iOS */
+      .video-gradient-fallback {
+        background: linear-gradient(
+          135deg,
+          rgba(10, 10, 10, 1) 0%,
+          rgba(13, 50, 45, 0.7) 20%,
+          rgba(10, 10, 10, 1) 40%,
+          rgba(15, 40, 55, 0.6) 60%,
+          rgba(10, 10, 10, 1) 80%,
+          rgba(20, 45, 40, 0.5) 100%
+        );
+        background-size: 400% 400%;
+        animation: gradientShift 15s ease infinite;
+        opacity: 0.38;
+      }
+      @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        25% { background-position: 50% 100%; }
+        50% { background-position: 100% 50%; }
+        75% { background-position: 50% 0%; }
+        100% { background-position: 0% 50%; }
+      }
+
       /* Utilities */
       .no-scrollbar::-webkit-scrollbar { display: none; }
       .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -224,11 +247,12 @@
     </div>
 
     {% if is_home2 %}
-    <!-- CENTRALIZED SCROLL-CONTROLLED BACKGROUND VIDEO -->
-    <div class="fixed inset-0 w-full h-full z-0 overflow-hidden pointer-events-none" style="transform: translate3d(0,0,0); will-change: transform;">
-      <video id="scroll-bg-video" muted playsinline preload="auto" class="w-full h-full object-cover opacity-[0.38]" style="transform: translate3d(0,0,0); will-change: transform; backface-visibility: hidden;">
-        <source src="{% if bg_video_url %}{{ bg_video_url }}{% else %}/media/bg_home.mp4{% endif %}" type="video/mp4">
-      </video>
+    <!-- SCROLL-CONTROLLED BACKGROUND (Canvas-based, works everywhere) -->
+    <div id="bg-video-container" class="fixed inset-0 w-full h-full z-0 overflow-hidden pointer-events-none" style="transform: translate3d(0,0,0);">
+      <!-- Canvas for frame rendering (primary — works on ALL devices) -->
+      <canvas id="scroll-bg-canvas" class="w-full h-full object-cover" style="opacity: 0.38;"></canvas>
+      <!-- CSS gradient shown while frames load -->
+      <div id="bg-video-fallback" class="absolute inset-0 video-gradient-fallback"></div>
     </div>
     {% endif %}
 
@@ -471,100 +495,164 @@
 
         {% if is_home2 %}
         // ============================================
-        // OPTIMIZED SCROLL-CONTROLLED VIDEO ENGINE
-        // Uses requestVideoFrameCallback for GPU-synced seeking
-        // with requestAnimationFrame fallback
+        // APPLE-STYLE CANVAS SCROLL ENGINE
+        // Works on ALL platforms: iOS, Android, Mac, Windows
+        // Preloads image frames, draws on canvas synced to scroll
         // ============================================
-        const video = document.getElementById('scroll-bg-video');
-        if (video) {
-          let videoReady = false;
-          let targetTime = 0;
-          let currentTime = 0;
+        const canvas = document.getElementById('scroll-bg-canvas');
+        const canvasFallback = document.getElementById('bg-video-fallback');
+        if (canvas) {
+          const ctx = canvas.getContext('2d');
+          const FRAMES_PATH = '{{ bg_frames_path|default:"/media/frames/bg_home" }}';
+          const TOTAL_FRAMES = {{ bg_frames_count|default:80 }};
+          const frames = [];
+          let framesLoaded = 0;
+          let currentFrame = 0;
+          let targetFrame = 0;
+          let canvasReady = false;
+          let animFrameId = null;
 
-          // Prime the video (required for mobile browsers)
-          function primeVideo() {
-            video.play().then(() => {
-              video.pause();
-              video.currentTime = 0;
-              videoReady = true;
-              dismissSplash();
-            }).catch(() => {
-              videoReady = true;
-              dismissSplash();
-            });
+          // Resize canvas to fill viewport
+          function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            if (canvasReady && frames[currentFrame]) {
+              drawFrame(currentFrame);
+            }
+          }
+          resizeCanvas();
+          window.addEventListener('resize', resizeCanvas, { passive: true });
+
+          // Draw a frame on canvas (cover-fit like object-cover)
+          function drawFrame(index) {
+            const img = frames[index];
+            if (!img || !img.complete || !img.naturalWidth) return;
+
+            const cw = canvas.width;
+            const ch = canvas.height;
+            const iw = img.naturalWidth;
+            const ih = img.naturalHeight;
+
+            // object-cover math
+            const scale = Math.max(cw / iw, ch / ih);
+            const sw = iw * scale;
+            const sh = ih * scale;
+            const sx = (cw - sw) / 2;
+            const sy = (ch - sh) / 2;
+
+            ctx.clearRect(0, 0, cw, ch);
+            ctx.drawImage(img, sx, sy, sw, sh);
           }
 
-          // Dismiss splash when video is playable
-          video.addEventListener('canplaythrough', function f() {
-            video.removeEventListener('canplaythrough', f);
-            dismissSplash();
-          });
+          // Preload all frames in batches
+          function preloadFrames() {
+            const BATCH_SIZE = 10;
+            let loaded = 0;
 
-          // Scroll → target time mapping (linear: scroll% = video%)
-          let scrollIdleTimer = null;
-          const hasFastSeek = typeof video.fastSeek === 'function';
+            function padNumber(n) {
+              return String(n).padStart(4, '0');
+            }
 
-          function updateTargetTime() {
-            const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-            if (scrollHeight <= 0 || !video.duration) return;
-            const scrollY = window.scrollY || window.pageYOffset || 0;
-            const scrollPercent = Math.max(0, Math.min(1, scrollY / scrollHeight));
-            targetTime = scrollPercent * (video.duration - 0.2);
+            function loadBatch(startIndex) {
+              const end = Math.min(startIndex + BATCH_SIZE, TOTAL_FRAMES);
+              for (let i = startIndex; i < end; i++) {
+                const img = new Image();
+                img.onload = function() {
+                  loaded++;
+                  framesLoaded = loaded;
 
-            // Schedule a precise seek after scrolling stops (200ms idle)
-            clearTimeout(scrollIdleTimer);
-            scrollIdleTimer = setTimeout(function() {
-              if (videoReady && video.duration && !video.seeking) {
-                const t = Math.max(0, Math.min(video.duration - 0.2, targetTime));
-                try { video.currentTime = t; } catch(e) {}
-              }
-            }, 200);
-          }
+                  // Show first frame as soon as it loads + hide gradient
+                  if (loaded === 1) {
+                    canvasReady = true;
+                    drawFrame(0);
+                    // Fade out gradient fallback
+                    if (canvasFallback) {
+                      canvasFallback.style.transition = 'opacity 0.8s ease';
+                      canvasFallback.style.opacity = '0';
+                      setTimeout(function() { canvasFallback.style.display = 'none'; }, 800);
+                    }
+                    dismissSplash();
+                  }
 
-          // Smooth interpolation loop — lerps toward targetTime using actual video.currentTime as base
-          function animLoop() {
-            if (videoReady && video.duration && !video.seeking) {
-              const diff = targetTime - video.currentTime;
-              if (Math.abs(diff) > 0.01) {
-                // If diff is tiny, snap to it, otherwise step towards it
-                const step = Math.abs(diff) < 0.04 ? diff : diff * 0.25;
-                const t = Math.max(0, Math.min(video.duration - 0.2, video.currentTime + step));
-                try {
-                  video.currentTime = t;
-                } catch(e) {}
+                  // Load next batch when current batch is done
+                  if (loaded === end && end < TOTAL_FRAMES) {
+                    loadBatch(end);
+                  }
+                };
+                img.onerror = function() {
+                  loaded++;
+                  if (loaded === end && end < TOTAL_FRAMES) {
+                    loadBatch(end);
+                  }
+                };
+                img.src = FRAMES_PATH + '/frame_' + padNumber(i + 1) + '.jpg';
+                frames[i] = img;
               }
             }
-            requestAnimationFrame(animLoop);
+
+            loadBatch(0);
+          }
+
+          // Scroll → frame mapping
+          function updateTargetFrame() {
+            const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+            if (scrollHeight <= 0) return;
+            const scrollY = Math.max(0, window.scrollY || window.pageYOffset || 0);
+            const scrollPercent = Math.max(0, Math.min(1, scrollY / scrollHeight));
+            targetFrame = Math.min(TOTAL_FRAMES - 1, Math.floor(scrollPercent * (TOTAL_FRAMES - 1)));
+          }
+
+          // Smooth interpolation loop
+          function animLoop() {
+            if (canvasReady) {
+              if (currentFrame !== targetFrame) {
+                // Lerp toward target (smooth)
+                const diff = targetFrame - currentFrame;
+                if (Math.abs(diff) <= 1) {
+                  currentFrame = targetFrame;
+                } else {
+                  currentFrame += Math.sign(diff) * Math.max(1, Math.floor(Math.abs(diff) * 0.3));
+                }
+                // Clamp
+                currentFrame = Math.max(0, Math.min(TOTAL_FRAMES - 1, currentFrame));
+
+                // Only draw if this frame is loaded
+                if (frames[currentFrame] && frames[currentFrame].complete) {
+                  drawFrame(currentFrame);
+                }
+              }
+            }
+            animFrameId = requestAnimationFrame(animLoop);
           }
 
           // Listeners
-          window.addEventListener('scroll', updateTargetTime, { passive: true });
-          window.addEventListener('touchmove', updateTargetTime, { passive: true });
-          window.addEventListener('resize', updateTargetTime, { passive: true });
-
-          // Init
-          function initVideo() {
-            primeVideo();
-            // Start the animation loop
-            requestAnimationFrame(animLoop);
-          }
-
-          if (video.readyState >= 2) {
-            initVideo();
-          } else {
-            video.addEventListener('loadeddata', initVideo, { once: true });
-          }
+          window.addEventListener('scroll', updateTargetFrame, { passive: true });
+          window.addEventListener('touchmove', updateTargetFrame, { passive: true });
 
           // Re-sync on tab return
           document.addEventListener('visibilitychange', function() {
-            if (!document.hidden && video.duration) {
-              updateTargetTime();
-              currentTime = targetTime;
-              try { video.currentTime = Math.max(0, Math.min(video.duration - 0.2, currentTime)); } catch(e) {}
+            if (!document.hidden) {
+              updateTargetFrame();
+              currentFrame = targetFrame;
+              if (canvasReady && frames[currentFrame] && frames[currentFrame].complete) {
+                drawFrame(currentFrame);
+              }
             }
           });
+
+          // Start
+          preloadFrames();
+          animLoop();
+
+          // Safety: if no frames loaded in 5 seconds, keep gradient
+          setTimeout(function() {
+            if (!canvasReady) {
+              dismissSplash();
+            }
+          }, 5000);
+
         } else {
-          // No video element — just dismiss splash
+          // No canvas element — just dismiss splash
           window.addEventListener('load', () => setTimeout(dismissSplash, 600));
         }
         {% else %}

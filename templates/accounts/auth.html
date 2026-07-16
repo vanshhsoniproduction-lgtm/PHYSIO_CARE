@@ -86,15 +86,35 @@
             100% { background-position: -200% 0; }
         }
 
+        /* Animated gradient fallback for iOS/mobile */
+        .auth-gradient-bg {
+            background: linear-gradient(
+                135deg,
+                rgba(10, 10, 10, 1) 0%,
+                rgba(13, 50, 45, 0.9) 25%,
+                rgba(10, 10, 10, 1) 50%,
+                rgba(15, 40, 55, 0.85) 75%,
+                rgba(10, 10, 10, 1) 100%
+            );
+            background-size: 400% 400%;
+            animation: authGradientShift 12s ease infinite;
+        }
+        @keyframes authGradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
     </style>
 </head>
 <body class="bg-surface-dark font-sans text-zinc-100 antialiased min-h-screen relative overflow-x-hidden">
 
-    <!-- Video Background -->
-    <div class="fixed inset-0 w-full h-full z-0 overflow-hidden pointer-events-none">
-        <video autoplay muted loop playsinline preload="auto" class="w-full h-full object-cover opacity-[0.2]">
-            <source src="/media/bg_home.mp4" type="video/mp4">
-        </video>
+    <!-- Background (Canvas-based, works everywhere) -->
+    <div id="auth-bg-container" class="fixed inset-0 w-full h-full z-0 overflow-hidden pointer-events-none">
+        <!-- Canvas for frame rendering -->
+        <canvas id="auth-bg-canvas" class="w-full h-full" style="opacity: 0.2;"></canvas>
+        <!-- CSS gradient shown while frames load -->
+        <div id="auth-bg-fallback" class="absolute inset-0 auth-gradient-bg"></div>
     </div>
 
     <!-- Main Container -->
@@ -422,6 +442,109 @@
             const activeTab = "{{ active_tab }}";
             switchMode(activeTab);
         });
+
+        // ============================================
+        // CANVAS BACKGROUND ANIMATION (auto-cycling frames)
+        // Works on ALL platforms: iOS, Android, Mac, Windows
+        // ============================================
+        (function() {
+            const canvas = document.getElementById('auth-bg-canvas');
+            const fallback = document.getElementById('auth-bg-fallback');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            const FRAMES_PATH = '/media/frames/bg_home';
+            const TOTAL_FRAMES = 80;
+            const FPS = 8; // match extraction fps for smooth 1x playback
+            const frames = [];
+            let currentFrame = 0;
+            let canvasReady = false;
+            let intervalId = null;
+
+            // Resize canvas to fill viewport
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                if (canvasReady && frames[currentFrame]) {
+                    drawFrame(currentFrame);
+                }
+            }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas, { passive: true });
+
+            // Draw a frame (object-cover)
+            function drawFrame(index) {
+                const img = frames[index];
+                if (!img || !img.complete || !img.naturalWidth) return;
+                const cw = canvas.width, ch = canvas.height;
+                const iw = img.naturalWidth, ih = img.naturalHeight;
+                const scale = Math.max(cw / iw, ch / ih);
+                const sw = iw * scale, sh = ih * scale;
+                const sx = (cw - sw) / 2, sy = (ch - sh) / 2;
+                ctx.clearRect(0, 0, cw, ch);
+                ctx.drawImage(img, sx, sy, sw, sh);
+            }
+
+            // Preload frames in batches
+            function preloadFrames() {
+                const BATCH = 10;
+                let loaded = 0;
+                function pad(n) { return String(n).padStart(4, '0'); }
+
+                function loadBatch(start) {
+                    const end = Math.min(start + BATCH, TOTAL_FRAMES);
+                    for (let i = start; i < end; i++) {
+                        const img = new Image();
+                        img.onload = function() {
+                            loaded++;
+                            if (loaded === 1) {
+                                canvasReady = true;
+                                drawFrame(0);
+                                // Fade out gradient
+                                if (fallback) {
+                                    fallback.style.transition = 'opacity 0.8s ease';
+                                    fallback.style.opacity = '0';
+                                    setTimeout(function() { fallback.style.display = 'none'; }, 800);
+                                }
+                                // Start auto-cycling
+                                startAnimation();
+                            }
+                            if (loaded === end && end < TOTAL_FRAMES) loadBatch(end);
+                        };
+                        img.onerror = function() {
+                            loaded++;
+                            if (loaded === end && end < TOTAL_FRAMES) loadBatch(end);
+                        };
+                        img.src = FRAMES_PATH + '/frame_' + pad(i + 1) + '.jpg';
+                        frames[i] = img;
+                    }
+                }
+                loadBatch(0);
+            }
+
+            // Auto-cycle through frames (like a looping video)
+            function startAnimation() {
+                if (intervalId) return;
+                intervalId = setInterval(function() {
+                    currentFrame = (currentFrame + 1) % TOTAL_FRAMES;
+                    if (frames[currentFrame] && frames[currentFrame].complete) {
+                        drawFrame(currentFrame);
+                    }
+                }, 1000 / FPS);
+            }
+
+            // Pause when tab hidden, resume when visible
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden) {
+                    clearInterval(intervalId);
+                    intervalId = null;
+                } else if (canvasReady) {
+                    startAnimation();
+                }
+            });
+
+            preloadFrames();
+        })();
     </script>
 </body>
 </html>

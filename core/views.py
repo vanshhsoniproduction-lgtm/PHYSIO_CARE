@@ -142,6 +142,8 @@ def landing_page(request):
         'services': SERVICES,
         'force_dark': True,
         'is_home2': True,
+        'bg_frames_path': '/media/frames/bg_home',
+        'bg_frames_count': 80,
     })
 
 
@@ -151,6 +153,8 @@ def services_page(request):
         'force_dark': True,
         'is_home2': True,
         'bg_video_url': '/media/bg_contact.mp4',
+        'bg_frames_path': '/media/frames/bg_contact',
+        'bg_frames_count': 80,
     })
 
 
@@ -166,10 +170,13 @@ def service_detail(request, slug):
         'all_services': SERVICES,
         'force_dark': True,
         'is_home2': True,
+        'bg_frames_path': '/media/frames/bg_home',
+        'bg_frames_count': 80,
     }
     
     if slug == 'sports-rehab':
         context['bg_video_url'] = '/media/bg_service2.mp4'
+        context['bg_frames_path'] = '/media/frames/bg_service2'
         
     return render(request, "core/service_detail.html", context)
 
@@ -179,6 +186,8 @@ def about_page(request):
         'lead_doctor': TEAM_MEMBERS[0],
         'force_dark': True,
         'is_home2': True,
+        'bg_frames_path': '/media/frames/bg_home',
+        'bg_frames_count': 80,
     })
 
 
@@ -187,6 +196,8 @@ def team_page(request):
         'team_members': TEAM_MEMBERS,
         'force_dark': True,
         'is_home2': True,
+        'bg_frames_path': '/media/frames/bg_home',
+        'bg_frames_count': 80,
     })
 
 
@@ -195,4 +206,6 @@ def contact_page(request):
         'force_dark': True,
         'is_home2': True,
         'bg_video_url': '/media/bg_contact.mp4',
+        'bg_frames_path': '/media/frames/bg_contact',
+        'bg_frames_count': 80,
     })
