@@ -19,10 +19,9 @@
       
       <!-- Scroll Indicator Dots -->
       <div id="scroll-dots-container" class="flex items-center gap-2 pt-4 transition-all duration-500">
-        <span class="service-dot w-8 h-1.5 rounded-full bg-teal-500 transition-all duration-300" data-index="0"></span>
-        <span class="service-dot w-2 h-1.5 rounded-full bg-white/20 transition-all duration-300" data-index="1"></span>
-        <span class="service-dot w-2 h-1.5 rounded-full bg-white/20 transition-all duration-300" data-index="2"></span>
-        <span class="service-dot w-2 h-1.5 rounded-full bg-white/20 transition-all duration-300" data-index="3"></span>
+        {% for slug, svc in services.items %}
+          <span class="service-dot {% if forloop.first %}w-8 bg-teal-500{% else %}w-2 bg-white/20{% endif %} h-1.5 rounded-full transition-all duration-300" data-index="{{ forloop.counter0 }}"></span>
+        {% endfor %}
       </div>
     </div>
   </div>
@@ -66,6 +65,8 @@
             href="{% url 'core:service-geriatric' %}"
           {% elif slug == 'pain-solutions' %}
             href="{% url 'core:service-pain' %}"
+          {% elif slug == 'neuro-care' %}
+            href="{% url 'core:service-neuro' %}"
           {% endif %}
           class="pointer-events-auto inline-flex items-center gap-2 font-display text-xs font-black text-teal-400 mt-2 hover:gap-3 transition-all"
         >
@@ -115,7 +116,7 @@
         dotsContainer.classList.remove('opacity-0', 'pointer-events-none');
         dotsContainer.classList.add('opacity-100');
 
-        const zones = 4;
+        const zones = {{ services.items|length }};
         let activeIndex = Math.floor((scrollPercent / 0.80) * zones);
         if (activeIndex >= zones) activeIndex = zones - 1;
 
