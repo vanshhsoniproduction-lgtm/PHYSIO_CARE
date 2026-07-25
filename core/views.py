@@ -292,7 +292,7 @@ def landing_page(request):
         'force_dark': True,
         'is_home2': True,
         'bg_frames_path': '/media/frames/bg_home',
-        'bg_frames_count': 80,
+        'bg_frames_count': 240,
     })
 
 
@@ -303,7 +303,7 @@ def services_page(request):
         'is_home2': True,
         'bg_video_url': '/media/bg_contact.mp4',
         'bg_frames_path': '/media/frames/bg_contact',
-        'bg_frames_count': 80,
+        'bg_frames_count': 240,
     })
 
 
@@ -320,7 +320,7 @@ def service_detail(request, slug):
         'force_dark': True,
         'is_home2': True,
         'bg_frames_path': '/media/frames/bg_home',
-        'bg_frames_count': 80,
+        'bg_frames_count': 240,
     }
     
     if slug == 'sports-rehab':
@@ -336,7 +336,7 @@ def about_page(request):
         'force_dark': True,
         'is_home2': True,
         'bg_frames_path': '/media/frames/bg_home',
-        'bg_frames_count': 80,
+        'bg_frames_count': 240,
     })
 
 
@@ -346,7 +346,7 @@ def team_page(request):
         'force_dark': True,
         'is_home2': True,
         'bg_frames_path': '/media/frames/bg_home',
-        'bg_frames_count': 80,
+        'bg_frames_count': 240,
     })
 
 
@@ -356,5 +356,5 @@ def contact_page(request):
         'is_home2': True,
         'bg_video_url': '/media/bg_contact.mp4',
         'bg_frames_path': '/media/frames/bg_contact',
-        'bg_frames_count': 80,
+        'bg_frames_count': 240,
     })

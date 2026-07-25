@@ -130,12 +130,12 @@
       .stagger-children .reveal:nth-child(3) { transition-delay: 0.19s; }
       .stagger-children .reveal:nth-child(4) { transition-delay: 0.26s; }
 
-      /* ====== Premium Frosted Splash Screen ====== */
+      /* ====== Premium Frosted Theme Green Splash Screen ====== */
       #splash-screen {
         position: fixed;
         inset: 0;
         z-index: 9999;
-        background: rgba(8, 8, 8, 0.92);
+        background: radial-gradient(circle at center, #0d5c54 0%, #073833 55%, #042421 100%);
         backdrop-filter: blur(40px) saturate(180%);
         -webkit-backdrop-filter: blur(40px) saturate(180%);
         display: flex;
@@ -143,6 +143,7 @@
         justify-content: center;
         flex-direction: column;
         transition: opacity 0.8s cubic-bezier(0.2, 0, 0, 1), transform 0.8s cubic-bezier(0.2, 0, 0, 1);
+        overflow: hidden;
       }
       #splash-screen.splash-exit {
         opacity: 0;
@@ -156,45 +157,45 @@
         justify-content: center;
       }
       #splash-logo {
-        width: 90px;
+        width: 95px;
         height: auto;
         position: relative;
         z-index: 2;
-        filter: drop-shadow(0 0 20px rgba(13, 148, 136, 0.4));
+        filter: drop-shadow(0 0 25px rgba(20, 184, 166, 0.65));
         animation: splash-breathe 2s ease-in-out infinite;
       }
       /* Glow Ring */
       #splash-logo-wrap::before {
         content: '';
         position: absolute;
-        width: 130px;
-        height: 130px;
+        width: 140px;
+        height: 140px;
         border-radius: 50%;
-        border: 2px solid rgba(13, 148, 136, 0.3);
+        border: 2px solid rgba(20, 184, 166, 0.45);
         animation: splash-ring 2s ease-in-out infinite;
         z-index: 1;
       }
       #splash-logo-wrap::after {
         content: '';
         position: absolute;
-        width: 160px;
-        height: 160px;
+        width: 175px;
+        height: 175px;
         border-radius: 50%;
-        border: 1px solid rgba(13, 148, 136, 0.12);
+        border: 1px solid rgba(20, 184, 166, 0.2);
         animation: splash-ring 2s ease-in-out infinite 0.3s;
         z-index: 0;
       }
       @keyframes splash-breathe {
-        0%, 100% { transform: scale(1); filter: drop-shadow(0 0 20px rgba(13, 148, 136, 0.4)); }
-        50% { transform: scale(1.06); filter: drop-shadow(0 0 35px rgba(13, 148, 136, 0.6)); }
+        0%, 100% { transform: scale(1); filter: drop-shadow(0 0 25px rgba(20, 184, 166, 0.65)); }
+        50% { transform: scale(1.08); filter: drop-shadow(0 0 40px rgba(45, 212, 191, 0.85)); }
       }
       @keyframes splash-ring {
-        0%, 100% { transform: scale(1); opacity: 0.5; }
-        50% { transform: scale(1.15); opacity: 0.15; }
+        0%, 100% { transform: scale(1); opacity: 0.6; }
+        50% { transform: scale(1.18); opacity: 0.2; }
       }
       /* Shimmer Text */
       .splash-text {
-        background: linear-gradient(90deg, rgba(255,255,255,0.6), rgba(255,255,255,1), rgba(255,255,255,0.6));
+        background: linear-gradient(90deg, rgba(204, 251, 241, 0.7), rgba(255, 255, 255, 1), rgba(204, 251, 241, 0.7));
         background-size: 200% 100%;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -210,16 +211,14 @@
       .video-gradient-fallback {
         background: linear-gradient(
           135deg,
-          rgba(10, 10, 10, 1) 0%,
-          rgba(13, 50, 45, 0.7) 20%,
-          rgba(10, 10, 10, 1) 40%,
-          rgba(15, 40, 55, 0.6) 60%,
-          rgba(10, 10, 10, 1) 80%,
-          rgba(20, 45, 40, 0.5) 100%
+          #031c19 0%,
+          #0b4a43 30%,
+          #052925 60%,
+          #0e3f3a 100%
         );
         background-size: 400% 400%;
-        animation: gradientShift 15s ease infinite;
-        opacity: 0.38;
+        animation: gradientShift 12s ease infinite;
+        opacity: 0.70;
       }
       @keyframes gradientShift {
         0% { background-position: 0% 50%; }
@@ -237,20 +236,24 @@
   </head>
   <body class="bg-surface-light dark:bg-surface-dark text-slate-800 dark:text-slate-100 transition-colors duration-300 font-sans">
     
-    <!-- SPLASH SCREEN -->
+    <!-- SPLASH SCREEN (Theme Green) -->
     <div id="splash-screen">
-      <div id="splash-logo-wrap">
+      <!-- Ambient Glow Blobs -->
+      <div class="absolute w-[450px] h-[450px] rounded-full bg-teal-400/25 blur-[100px] pointer-events-none animate-[pulse_4s_infinite]"></div>
+      <div class="absolute w-[280px] h-[280px] rounded-full bg-emerald-400/20 blur-[75px] pointer-events-none"></div>
+
+      <div id="splash-logo-wrap" class="relative z-10">
         <img id="splash-logo" src="/media/logo_single.png" alt="Physio Care" />
       </div>
-      <div class="mt-6 font-display text-2xl font-bold tracking-widest splash-text">Physio Care</div>
-      <div class="mt-2 text-[10px] font-bold uppercase tracking-[0.3em] text-zinc-500">Restore · Reclaim · Recover</div>
+      <div class="mt-6 font-display text-2xl font-black tracking-widest splash-text relative z-10">Physio Care</div>
+      <div class="mt-2 text-[10px] font-extrabold uppercase tracking-[0.35em] text-teal-200/80 relative z-10">Restore · Reclaim · Recover</div>
     </div>
 
     {% if is_home2 %}
-    <!-- SCROLL-CONTROLLED BACKGROUND (Canvas-based, works everywhere) -->
+    <!-- SCROLL-CONTROLLED BACKGROUND (Canvas-based, high clarity & non-dull opacity) -->
     <div id="bg-video-container" class="fixed inset-0 w-full h-full z-0 overflow-hidden pointer-events-none" style="transform: translate3d(0,0,0);">
       <!-- Canvas for frame rendering (primary — works on ALL devices) -->
-      <canvas id="scroll-bg-canvas" class="w-full h-full object-cover" style="opacity: 0.38;"></canvas>
+      <canvas id="scroll-bg-canvas" class="w-full h-full object-cover" style="opacity: 0.75;"></canvas>
       <!-- CSS gradient shown while frames load -->
       <div id="bg-video-fallback" class="absolute inset-0 video-gradient-fallback"></div>
     </div>
@@ -497,16 +500,24 @@
       (function() {
         const splash = document.getElementById('splash-screen');
         const pageContent = document.getElementById('page-content');
+        const splashStartTime = performance.now();
+        const MIN_SPLASH_DURATION = 500; // Minimum 0.5s screen presence guaranteed
         let splashDismissed = false;
 
         function dismissSplash() {
           if (splashDismissed) return;
           splashDismissed = true;
           if (!splash || !pageContent) return;
-          splash.classList.add('splash-exit');
-          pageContent.classList.remove('opacity-0');
-          pageContent.classList.add('opacity-100');
-          setTimeout(() => splash.remove(), 900);
+
+          const elapsedTime = performance.now() - splashStartTime;
+          const remainingTime = Math.max(0, MIN_SPLASH_DURATION - elapsedTime);
+
+          setTimeout(() => {
+            splash.classList.add('splash-exit');
+            pageContent.classList.remove('opacity-0');
+            pageContent.classList.add('opacity-100');
+            setTimeout(() => splash.remove(), 900);
+          }, remainingTime);
         }
 
         // Safety fallback — always dismiss after 3.5s max
@@ -514,94 +525,107 @@
 
         {% if is_home2 %}
         // ============================================
-        // APPLE-STYLE CANVAS SCROLL ENGINE
-        // Works on ALL platforms: iOS, Android, Mac, Windows
-        // Preloads image frames, draws on canvas synced to scroll
+        // APPLE-STYLE HIGH-PERFORMANCE CANVAS ENGINE
+        // Full 240-frame native 24fps smooth scroll scrubbing
         // ============================================
         const canvas = document.getElementById('scroll-bg-canvas');
         const canvasFallback = document.getElementById('bg-video-fallback');
         if (canvas) {
-          const ctx = canvas.getContext('2d');
+          const ctx = canvas.getContext('2d', { alpha: false });
           const FRAMES_PATH = '{{ bg_frames_path|default:"/media/frames/bg_home" }}';
-          const TOTAL_FRAMES = {{ bg_frames_count|default:80 }};
+          const TOTAL_FRAMES = {{ bg_frames_count|default:240 }};
           const frames = [];
           let framesLoaded = 0;
           let currentFrame = 0;
+          let currentFrameFloat = 0;
           let targetFrame = 0;
           let canvasReady = false;
           let animFrameId = null;
 
-          // Resize canvas to fill viewport
           function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            if (canvasReady && frames[currentFrame]) {
+            if (canvasReady) {
               drawFrame(currentFrame);
             }
           }
           resizeCanvas();
           window.addEventListener('resize', resizeCanvas, { passive: true });
 
-          // Draw a frame on canvas (cover-fit like object-cover)
+          // Find nearest loaded frame if exact target frame is still fetching
+          function getBestFrame(index) {
+            if (frames[index] && frames[index].complete && frames[index].naturalWidth) {
+              return frames[index];
+            }
+            // Search outwards for nearest ready frame
+            for (let radius = 1; radius < 25; radius++) {
+              const prev = index - radius;
+              if (prev >= 0 && frames[prev] && frames[prev].complete && frames[prev].naturalWidth) {
+                return frames[prev];
+              }
+              const next = index + radius;
+              if (next < TOTAL_FRAMES && frames[next] && frames[next].complete && frames[next].naturalWidth) {
+                return frames[next];
+              }
+            }
+            return null;
+          }
+
           function drawFrame(index) {
-            const img = frames[index];
-            if (!img || !img.complete || !img.naturalWidth) return;
+            const img = getBestFrame(index);
+            if (!img) return;
 
             const cw = canvas.width;
             const ch = canvas.height;
             const iw = img.naturalWidth;
             const ih = img.naturalHeight;
 
-            // object-cover math
+            // Cover fit
             const scale = Math.max(cw / iw, ch / ih);
             const sw = iw * scale;
             const sh = ih * scale;
             const sx = (cw - sw) / 2;
             const sy = (ch - sh) / 2;
 
-            ctx.clearRect(0, 0, cw, ch);
             ctx.drawImage(img, sx, sy, sw, sh);
           }
 
-          // Preload all frames in batches
+          // Preload frames in fast parallel batches
           function preloadFrames() {
-            const BATCH_SIZE = 10;
-            let loaded = 0;
+            const CONCURRENCY = 20;
+            let loadedCount = 0;
 
             function padNumber(n) {
               return String(n).padStart(4, '0');
             }
 
             function loadBatch(startIndex) {
-              const end = Math.min(startIndex + BATCH_SIZE, TOTAL_FRAMES);
-              for (let i = startIndex; i < end; i++) {
+              const endIndex = Math.min(startIndex + CONCURRENCY, TOTAL_FRAMES);
+              for (let i = startIndex; i < endIndex; i++) {
                 const img = new Image();
                 img.onload = function() {
-                  loaded++;
-                  framesLoaded = loaded;
+                  loadedCount++;
+                  framesLoaded = loadedCount;
 
-                  // Show first frame as soon as it loads + hide gradient
-                  if (loaded === 1) {
+                  if (loadedCount === 1) {
                     canvasReady = true;
                     drawFrame(0);
-                    // Fade out gradient fallback
                     if (canvasFallback) {
-                      canvasFallback.style.transition = 'opacity 0.8s ease';
+                      canvasFallback.style.transition = 'opacity 0.6s ease';
                       canvasFallback.style.opacity = '0';
-                      setTimeout(function() { canvasFallback.style.display = 'none'; }, 800);
+                      setTimeout(() => { canvasFallback.style.display = 'none'; }, 600);
                     }
                     dismissSplash();
                   }
 
-                  // Load next batch when current batch is done
-                  if (loaded === end && end < TOTAL_FRAMES) {
-                    loadBatch(end);
+                  if (loadedCount === endIndex && endIndex < TOTAL_FRAMES) {
+                    loadBatch(endIndex);
                   }
                 };
                 img.onerror = function() {
-                  loaded++;
-                  if (loaded === end && end < TOTAL_FRAMES) {
-                    loadBatch(end);
+                  loadedCount++;
+                  if (loadedCount === endIndex && endIndex < TOTAL_FRAMES) {
+                    loadBatch(endIndex);
                   }
                 };
                 img.src = FRAMES_PATH + '/frame_' + padNumber(i + 1) + '.jpg';
@@ -612,67 +636,53 @@
             loadBatch(0);
           }
 
-          // Scroll → frame mapping
           function updateTargetFrame() {
             const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
             if (scrollHeight <= 0) return;
             const scrollY = Math.max(0, window.scrollY || window.pageYOffset || 0);
             const scrollPercent = Math.max(0, Math.min(1, scrollY / scrollHeight));
-            targetFrame = Math.min(TOTAL_FRAMES - 1, Math.floor(scrollPercent * (TOTAL_FRAMES - 1)));
+            targetFrame = Math.min(TOTAL_FRAMES - 1, Math.round(scrollPercent * (TOTAL_FRAMES - 1)));
           }
 
-          // Smooth interpolation loop
+          // High-frequency smooth lerp interpolation loop
           function animLoop() {
             if (canvasReady) {
-              if (currentFrame !== targetFrame) {
-                // Lerp toward target (smooth)
-                const diff = targetFrame - currentFrame;
-                if (Math.abs(diff) <= 1) {
-                  currentFrame = targetFrame;
-                } else {
-                  currentFrame += Math.sign(diff) * Math.max(1, Math.floor(Math.abs(diff) * 0.3));
-                }
-                // Clamp
-                currentFrame = Math.max(0, Math.min(TOTAL_FRAMES - 1, currentFrame));
-
-                // Only draw if this frame is loaded
-                if (frames[currentFrame] && frames[currentFrame].complete) {
+              const diff = targetFrame - currentFrameFloat;
+              if (Math.abs(diff) > 0.01) {
+                // Smooth interpolation step
+                currentFrameFloat += diff * 0.22;
+                const nextFrame = Math.min(TOTAL_FRAMES - 1, Math.max(0, Math.round(currentFrameFloat)));
+                if (nextFrame !== currentFrame) {
+                  currentFrame = nextFrame;
                   drawFrame(currentFrame);
                 }
+              } else if (currentFrame !== targetFrame) {
+                currentFrameFloat = targetFrame;
+                currentFrame = targetFrame;
+                drawFrame(currentFrame);
               }
             }
             animFrameId = requestAnimationFrame(animLoop);
           }
 
-          // Listeners
           window.addEventListener('scroll', updateTargetFrame, { passive: true });
           window.addEventListener('touchmove', updateTargetFrame, { passive: true });
 
-          // Re-sync on tab return
           document.addEventListener('visibilitychange', function() {
             if (!document.hidden) {
               updateTargetFrame();
+              currentFrameFloat = targetFrame;
               currentFrame = targetFrame;
-              if (canvasReady && frames[currentFrame] && frames[currentFrame].complete) {
-                drawFrame(currentFrame);
-              }
+              if (canvasReady) drawFrame(currentFrame);
             }
           });
 
-          // Start
           preloadFrames();
           animLoop();
 
-          // Safety: if no frames loaded in 5 seconds, keep gradient
           setTimeout(function() {
-            if (!canvasReady) {
-              dismissSplash();
-            }
-          }, 5000);
-
-        } else {
-          // No canvas element — just dismiss splash
-          window.addEventListener('load', () => setTimeout(dismissSplash, 600));
+            if (!canvasReady) dismissSplash();
+          }, 4000);
         }
         {% else %}
         // Non-video pages: simple dismiss
