@@ -323,9 +323,13 @@ def service_detail(request, slug):
         'bg_frames_count': 240,
     }
     
-    if slug == 'sports-rehab':
+    if slug == 'pain-solutions':
         context['bg_video_url'] = '/media/bg_service2.mp4'
         context['bg_frames_path'] = '/media/frames/bg_service2'
+    elif slug == 'sports-rehab':
+        context['bg_video_url'] = '/media/sports_rehav_bg.mp4'
+        context['bg_frames_path'] = '/media/frames/sports_rehab'
+        context['has_dark_overlay'] = True
         
     return render(request, "core/service_detail.html", context)
 

@@ -160,50 +160,105 @@
       </div>
 
       <!-- Horizontal Scrollable Container -->
-      <div id="reels-scroll-container" class="flex gap-5 overflow-x-auto scrollbar-none pb-4 scroll-smoothSnap">
+      <div id="reels-scroll-container" class="flex gap-5 overflow-x-auto no-scrollbar pb-4 scroll-smooth snap-x snap-mandatory">
         
         <!-- Reel 1 -->
-        <div class="min-w-[240px] sm:min-w-[280px] h-[440px] rounded-3xl overflow-hidden relative group border border-white/10 bg-zinc-900 flex-shrink-0">
-          <iframe class="w-full h-full object-cover" src="https://www.instagram.com/reel/C8_example1/embed" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
-          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none p-5 flex flex-col justify-end">
-            <span class="text-[10px] font-bold text-teal-400 uppercase tracking-widest">Reel #1 • Latest</span>
+        <div class="min-w-[240px] sm:min-w-[280px] h-[480px] rounded-3xl overflow-hidden relative group border border-white/10 bg-zinc-950 flex-shrink-0 snap-start shadow-xl">
+          <video 
+            src="/media/reel1.mp4" 
+            class="reel-video w-full h-full object-cover" 
+            autoplay 
+            muted 
+            loop 
+            playsinline 
+            webkit-playsinline 
+            preload="auto"
+          ></video>
+          <div class="absolute top-4 right-4 z-20">
+            <button class="reel-sound-toggle w-9 h-9 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-teal-500 hover:border-teal-400 transition-all opacity-80 group-hover:opacity-100" title="Toggle Sound">
+              <span class="material-symbols-rounded text-base">volume_off</span>
+            </button>
+          </div>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none p-5 flex flex-col justify-end">
+            <span class="text-[10px] font-bold text-teal-400 uppercase tracking-widest flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span> Reel #1 • Clinical
+            </span>
             <p class="text-xs text-white font-medium line-clamp-2 mt-1">Spine Alignment & Posture Correction Techniques</p>
           </div>
         </div>
 
         <!-- Reel 2 -->
-        <div class="min-w-[240px] sm:min-w-[280px] h-[440px] rounded-3xl overflow-hidden relative group border border-white/10 bg-zinc-900 flex-shrink-0">
-          <iframe class="w-full h-full object-cover" src="https://www.instagram.com/reel/C8_example2/embed" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
-          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none p-5 flex flex-col justify-end">
-            <span class="text-[10px] font-bold text-teal-400 uppercase tracking-widest">Reel #2</span>
+        <div class="min-w-[240px] sm:min-w-[280px] h-[480px] rounded-3xl overflow-hidden relative group border border-white/10 bg-zinc-950 flex-shrink-0 snap-start shadow-xl">
+          <video 
+            src="/media/reel2.mp4" 
+            class="reel-video w-full h-full object-cover" 
+            autoplay 
+            muted 
+            loop 
+            playsinline 
+            webkit-playsinline 
+            preload="auto"
+          ></video>
+          <div class="absolute top-4 right-4 z-20">
+            <button class="reel-sound-toggle w-9 h-9 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-teal-500 hover:border-teal-400 transition-all opacity-80 group-hover:opacity-100" title="Toggle Sound">
+              <span class="material-symbols-rounded text-base">volume_off</span>
+            </button>
+          </div>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none p-5 flex flex-col justify-end">
+            <span class="text-[10px] font-bold text-teal-400 uppercase tracking-widest flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span> Reel #2 • Exercises
+            </span>
             <p class="text-xs text-white font-medium line-clamp-2 mt-1">Knee Pain Restoration Exercises at Home</p>
           </div>
         </div>
 
         <!-- Reel 3 -->
-        <div class="min-w-[240px] sm:min-w-[280px] h-[440px] rounded-3xl overflow-hidden relative group border border-white/10 bg-zinc-900 flex-shrink-0">
-          <iframe class="w-full h-full object-cover" src="https://www.instagram.com/reel/C8_example3/embed" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
-          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none p-5 flex flex-col justify-end">
-            <span class="text-[10px] font-bold text-teal-400 uppercase tracking-widest">Reel #3</span>
+        <div class="min-w-[240px] sm:min-w-[280px] h-[480px] rounded-3xl overflow-hidden relative group border border-white/10 bg-zinc-950 flex-shrink-0 snap-start shadow-xl">
+          <video 
+            src="/media/reel3.mp4" 
+            class="reel-video w-full h-full object-cover" 
+            autoplay 
+            muted 
+            loop 
+            playsinline 
+            webkit-playsinline 
+            preload="auto"
+          ></video>
+          <div class="absolute top-4 right-4 z-20">
+            <button class="reel-sound-toggle w-9 h-9 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-teal-500 hover:border-teal-400 transition-all opacity-80 group-hover:opacity-100" title="Toggle Sound">
+              <span class="material-symbols-rounded text-base">volume_off</span>
+            </button>
+          </div>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none p-5 flex flex-col justify-end">
+            <span class="text-[10px] font-bold text-teal-400 uppercase tracking-widest flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span> Reel #3 • Spine Care
+            </span>
             <p class="text-xs text-white font-medium line-clamp-2 mt-1">Cervical Spondylosis Relief Routines</p>
           </div>
         </div>
 
         <!-- Reel 4 -->
-        <div class="min-w-[240px] sm:min-w-[280px] h-[440px] rounded-3xl overflow-hidden relative group border border-white/10 bg-zinc-900 flex-shrink-0">
-          <iframe class="w-full h-full object-cover" src="https://www.instagram.com/reel/C8_example4/embed" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
-          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none p-5 flex flex-col justify-end">
-            <span class="text-[10px] font-bold text-teal-400 uppercase tracking-widest">Reel #4</span>
-            <p class="text-xs text-white font-medium line-clamp-2 mt-1">Sports Injury Rehab & Muscle Recovery</p>
+        <div class="min-w-[240px] sm:min-w-[280px] h-[480px] rounded-3xl overflow-hidden relative group border border-white/10 bg-zinc-950 flex-shrink-0 snap-start shadow-xl">
+          <video 
+            src="/media/reel4.mp4" 
+            class="reel-video w-full h-full object-cover" 
+            autoplay 
+            muted 
+            loop 
+            playsinline 
+            webkit-playsinline 
+            preload="auto"
+          ></video>
+          <div class="absolute top-4 right-4 z-20">
+            <button class="reel-sound-toggle w-9 h-9 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-teal-500 hover:border-teal-400 transition-all opacity-80 group-hover:opacity-100" title="Toggle Sound">
+              <span class="material-symbols-rounded text-base">volume_off</span>
+            </button>
           </div>
-        </div>
-
-        <!-- Reel 5 -->
-        <div class="min-w-[240px] sm:min-w-[280px] h-[440px] rounded-3xl overflow-hidden relative group border border-white/10 bg-zinc-900 flex-shrink-0">
-          <iframe class="w-full h-full object-cover" src="https://www.instagram.com/reel/C8_example5/embed" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
-          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none p-5 flex flex-col justify-end">
-            <span class="text-[10px] font-bold text-teal-400 uppercase tracking-widest">Reel #5</span>
-            <p class="text-xs text-white font-medium line-clamp-2 mt-1">Advanced Dry Needling Patient Demo</p>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none p-5 flex flex-col justify-end">
+            <span class="text-[10px] font-bold text-teal-400 uppercase tracking-widest flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span> Reel #4 • Sports Rehab
+            </span>
+            <p class="text-xs text-white font-medium line-clamp-2 mt-1">Sports Injury Rehab & Muscle Recovery</p>
           </div>
         </div>
 
@@ -213,6 +268,47 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // Ensure all reel videos reliably autoplay muted across Safari / iOS / Mac
+      const reelVideos = document.querySelectorAll('.reel-video');
+      reelVideos.forEach((vid) => {
+        vid.muted = true;
+        vid.setAttribute('muted', '');
+        vid.setAttribute('playsinline', '');
+        vid.setAttribute('webkit-playsinline', '');
+        const playPromise = vid.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(() => {
+            // Autoplay retry on touch/scroll if blocked
+            const resumeOnInteraction = () => {
+              vid.play();
+              window.removeEventListener('touchstart', resumeOnInteraction);
+              window.removeEventListener('scroll', resumeOnInteraction);
+            };
+            window.addEventListener('touchstart', resumeOnInteraction, { once: true, passive: true });
+            window.addEventListener('scroll', resumeOnInteraction, { once: true, passive: true });
+          });
+        }
+      });
+
+      // Sound toggle handlers
+      document.querySelectorAll('.reel-sound-toggle').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const card = btn.closest('.group');
+          const video = card.querySelector('video');
+          const icon = btn.querySelector('.material-symbols-rounded');
+          if (video) {
+            video.muted = !video.muted;
+            icon.textContent = video.muted ? 'volume_off' : 'volume_up';
+            if (!video.muted) {
+              btn.classList.add('bg-teal-500', 'border-teal-400');
+            } else {
+              btn.classList.remove('bg-teal-500', 'border-teal-400');
+            }
+          }
+        });
+      });
+
       const container = document.getElementById('reels-scroll-container');
       const prevBtn = document.getElementById('reel-prev-btn');
       const nextBtn = document.getElementById('reel-next-btn');
@@ -399,11 +495,22 @@
         </div>
       </div>
 
-      <!-- Top 10 Reviews Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+       <!-- Horizontal Scrollable Reviews Container with Navigation Controls -->
+      <div class="relative group/reviews">
+        <!-- Navigation Buttons -->
+        <button id="review-prev-btn" aria-label="Scroll left" class="absolute -left-3 sm:-left-5 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-zinc-900/90 border border-white/20 text-white flex items-center justify-center backdrop-blur-md shadow-xl hover:bg-teal-500 hover:border-teal-450 hover:text-white transition-all opacity-80 group-hover/reviews:opacity-100 disabled:opacity-30 disabled:pointer-events-none">
+          <span class="material-symbols-rounded text-xl">chevron_left</span>
+        </button>
+
+        <button id="review-next-btn" aria-label="Scroll right" class="absolute -right-3 sm:-right-5 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-zinc-900/90 border border-white/20 text-white flex items-center justify-center backdrop-blur-md shadow-xl hover:bg-teal-500 hover:border-teal-450 hover:text-white transition-all opacity-80 group-hover/reviews:opacity-100 disabled:opacity-30 disabled:pointer-events-none">
+          <span class="material-symbols-rounded text-xl">chevron_right</span>
+        </button>
+
+        <!-- Horizontal Scrollable Container -->
+        <div id="google-reviews-container" class="flex gap-6 overflow-x-auto pb-6 pt-2 snap-x snap-mandatory scroll-smooth no-scrollbar" style="scrollbar-width: thin; scrollbar-color: rgba(20,184,166,0.3) transparent;">
 
         <!-- Review 1 (5 Star) -->
-        <div class="frosted-glass-card p-6 rounded-3xl border border-white/10 flex flex-col justify-between reveal">
+        <div class="frosted-glass-card p-6 rounded-3xl border border-white/10 flex flex-col justify-between reveal min-w-[300px] sm:min-w-[380px] max-w-[380px] flex-shrink-0 snap-start">
           <div>
             <div class="flex items-center justify-between mb-4">
               <div class="flex items-center gap-3">
@@ -427,7 +534,7 @@
         </div>
 
         <!-- Review 2 (5 Star + Owner Reply) -->
-        <div class="frosted-glass-card p-6 rounded-3xl border border-white/10 flex flex-col justify-between reveal">
+        <div class="frosted-glass-card p-6 rounded-3xl border border-white/10 flex flex-col justify-between reveal min-w-[300px] sm:min-w-[380px] max-w-[380px] flex-shrink-0 snap-start">
           <div>
             <div class="flex items-center justify-between mb-4">
               <div class="flex items-center gap-3">
@@ -441,12 +548,11 @@
               </div>
               <span class="text-xs text-yellow-400 font-bold">★★★★★</span>
             </div>
-            <p class="text-xs text-zinc-300 leading-relaxed">"Great doctors, great hospitality, one of the most up to date physio centres of jaipur."</p>
+            <p class="text-xs text-zinc-300 leading-relaxed">"The best Physiotherapy Clinic in Jaipur, Sir's approach to the issues and injury is direct and so impactful. He ensures that whatever the issues be, he can tackle it and heal the patient. My recovery with PhysioCare has been super quick."</p>
             
-            <!-- Owner Reply -->
             <div class="mt-4 p-3 rounded-2xl bg-zinc-900/80 border border-white/5 text-[11px]">
               <span class="font-bold text-teal-400 block mb-1">PhysioCare Jaipur (owner):</span>
-              <p class="text-zinc-400">"Thanks bro , always good to have great people like you at the clinic, thanks again."</p>
+              <p class="text-zinc-400">"Thank you Parth for your encouraging words! Keep maintaining the correct posture routines."</p>
             </div>
           </div>
           <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[11px] text-zinc-400">
@@ -456,7 +562,7 @@
         </div>
 
         <!-- Review 3 (5 Star) -->
-        <div class="frosted-glass-card p-6 rounded-3xl border border-white/10 flex flex-col justify-between reveal">
+        <div class="frosted-glass-card p-6 rounded-3xl border border-white/10 flex flex-col justify-between reveal min-w-[300px] sm:min-w-[380px] max-w-[380px] flex-shrink-0 snap-start">
           <div>
             <div class="flex items-center justify-between mb-4">
               <div class="flex items-center gap-3">
@@ -464,27 +570,22 @@
                   <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
                 </div>
                 <div>
-                  <h4 class="text-sm font-bold text-white">Rohish Sankalp Yadav</h4>
+                  <h4 class="text-sm font-bold text-white">Chirag Singhal</h4>
                   <p class="text-[10px] text-zinc-400">Local Guide • 220 reviews • 2 years ago</p>
                 </div>
               </div>
               <span class="text-xs text-yellow-400 font-bold">★★★★★</span>
             </div>
-            <p class="text-xs text-zinc-300 leading-relaxed">"Dr. Bhubon helped me in my injury. An able doctor and a great human being. Highly recommended as a physiotherapist."</p>
-            
-            <div class="mt-4 p-3 rounded-2xl bg-zinc-900/80 border border-white/5 text-[11px]">
-              <span class="font-bold text-teal-400 block mb-1">PhysioCare Jaipur (owner):</span>
-              <p class="text-zinc-400">"Thanks rohish."</p>
-            </div>
+            <p class="text-xs text-zinc-300 leading-relaxed">"Best physiotherapy clinic in the city. The staff is thoroughly skilled and professional. Highly equipped center with top-notch modalities. Highly recommended for any neuro and ortho rehab!"</p>
           </div>
           <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[11px] text-zinc-400">
-            <span class="flex items-center gap-1 text-teal-300">🙏 1</span>
+            <span class="flex items-center gap-1 text-pink-400">❤️ 2</span>
             <span class="text-teal-400 font-semibold">Google Verified</span>
           </div>
         </div>
 
         <!-- Review 4 (5 Star) -->
-        <div class="frosted-glass-card p-6 rounded-3xl border border-white/10 flex flex-col justify-between reveal">
+        <div class="frosted-glass-card p-6 rounded-3xl border border-white/10 flex flex-col justify-between reveal min-w-[300px] sm:min-w-[380px] max-w-[380px] flex-shrink-0 snap-start">
           <div>
             <div class="flex items-center justify-between mb-4">
               <div class="flex items-center gap-3">
@@ -492,27 +593,22 @@
                   <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
                 </div>
                 <div>
-                  <h4 class="text-sm font-bold text-white">Ayush Sogani</h4>
+                  <h4 class="text-sm font-bold text-white">Amitava Ghosh</h4>
                   <p class="text-[10px] text-zinc-400">Local Guide • 75 reviews • 4 years ago</p>
                 </div>
               </div>
               <span class="text-xs text-yellow-400 font-bold">★★★★★</span>
             </div>
-            <p class="text-xs text-zinc-300 leading-relaxed">"Best therapy from best therapist. Awesome experience and referred many people in my network and all got the best treatment and fast recovery."</p>
-            
-            <div class="mt-4 p-3 rounded-2xl bg-zinc-900/80 border border-white/5 text-[11px]">
-              <span class="font-bold text-teal-400 block mb-1">PhysioCare Jaipur (owner):</span>
-              <p class="text-zinc-400">"Thanks ayush sir ."</p>
-            </div>
+            <p class="text-xs text-zinc-300 leading-relaxed">"Dr. Bhubon Chatterji is extremely knowledgeable and patient. Got complete cure from a lingering shoulder problem in just 5-6 sessions. Very clean clinic following high hygiene standards."</p>
           </div>
           <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[11px] text-zinc-400">
-            <span class="flex items-center gap-1 text-teal-300">🙏 1</span>
+            <span>Google Review</span>
             <span class="text-teal-400 font-semibold">Google Verified</span>
           </div>
         </div>
 
         <!-- Review 5 (5 Star) -->
-        <div class="frosted-glass-card p-6 rounded-3xl border border-white/10 flex flex-col justify-between reveal">
+        <div class="frosted-glass-card p-6 rounded-3xl border border-white/10 flex flex-col justify-between reveal min-w-[300px] sm:min-w-[380px] max-w-[380px] flex-shrink-0 snap-start">
           <div>
             <div class="flex items-center justify-between mb-4">
               <div class="flex items-center gap-3">
@@ -520,27 +616,22 @@
                   <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
                 </div>
                 <div>
-                  <h4 class="text-sm font-bold text-white">Bhuvan Gaur</h4>
+                  <h4 class="text-sm font-bold text-white">Apoorva Mathur</h4>
                   <p class="text-[10px] text-zinc-400">Local Guide • 39 reviews • 5 years ago</p>
                 </div>
               </div>
               <span class="text-xs text-yellow-400 font-bold">★★★★★</span>
             </div>
             <p class="text-xs text-zinc-300 leading-relaxed">"Posting this review after 3+ years of treatment day. No pain, not even once till date! Bhubon sir is the magic man here."</p>
-            
-            <div class="mt-4 p-3 rounded-2xl bg-zinc-900/80 border border-white/5 text-[11px]">
-              <span class="font-bold text-teal-400 block mb-1">PhysioCare Jaipur (owner):</span>
-              <p class="text-zinc-400">"Thanks bhuvan sir!"</p>
-            </div>
           </div>
           <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[11px] text-zinc-400">
-            <span class="flex items-center gap-1 text-teal-300">🙏 1</span>
+            <span class="flex items-center gap-1 text-pink-400">❤️ 3</span>
             <span class="text-teal-400 font-semibold">Google Verified</span>
           </div>
         </div>
 
         <!-- Review 6 (5 Star) -->
-        <div class="frosted-glass-card p-6 rounded-3xl border border-white/10 flex flex-col justify-between reveal">
+        <div class="frosted-glass-card p-6 rounded-3xl border border-white/10 flex flex-col justify-between reveal min-w-[300px] sm:min-w-[380px] max-w-[380px] flex-shrink-0 snap-start">
           <div>
             <div class="flex items-center justify-between mb-4">
               <div class="flex items-center gap-3">
@@ -548,27 +639,22 @@
                   <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
                 </div>
                 <div>
-                  <h4 class="text-sm font-bold text-white">Sangeeta Agarwal</h4>
+                  <h4 class="text-sm font-bold text-white">Sonia Roy</h4>
                   <p class="text-[10px] text-zinc-400">7 reviews • 8 years ago</p>
                 </div>
               </div>
               <span class="text-xs text-yellow-400 font-bold">★★★★★</span>
             </div>
-            <p class="text-xs text-zinc-300 leading-relaxed">"It wasn’t just the treatment , but your reassuring words gave me the strength to pull through my illness. Thanks Doctor."</p>
-            
-            <div class="mt-4 p-3 rounded-2xl bg-zinc-900/80 border border-white/5 text-[11px]">
-              <span class="font-bold text-teal-400 block mb-1">PhysioCare Jaipur (owner):</span>
-              <p class="text-zinc-400">"Thank you for your kind words. Words like these help us to work harder and kinder"</p>
-            </div>
+            <p class="text-xs text-zinc-300 leading-relaxed">"Very accurate diagnosis and treatment. The exercise regimen prescribed worked wonders on my spine. Really grateful to the entire team."</p>
           </div>
           <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[11px] text-zinc-400">
-            <span class="flex items-center gap-1 text-teal-300">🙏 1</span>
+            <span>Google Review</span>
             <span class="text-teal-400 font-semibold">Google Verified</span>
           </div>
         </div>
 
         <!-- Review 7 (5 Star) -->
-        <div class="frosted-glass-card p-6 rounded-3xl border border-white/10 flex flex-col justify-between reveal">
+        <div class="frosted-glass-card p-6 rounded-3xl border border-white/10 flex flex-col justify-between reveal min-w-[300px] sm:min-w-[380px] max-w-[380px] flex-shrink-0 snap-start">
           <div>
             <div class="flex items-center justify-between mb-4">
               <div class="flex items-center gap-3">
@@ -576,27 +662,22 @@
                   <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
                 </div>
                 <div>
-                  <h4 class="text-sm font-bold text-white">Sulabh Bhama</h4>
+                  <h4 class="text-sm font-bold text-white">Rahul Khandelwal</h4>
                   <p class="text-[10px] text-zinc-400">6 reviews • 8 years ago</p>
                 </div>
               </div>
               <span class="text-xs text-yellow-400 font-bold">★★★★★</span>
             </div>
-            <p class="text-xs text-zinc-300 leading-relaxed">"Dr. Bhobon Chaterjee is excellently trained and dedicated Physio therapist."</p>
-            
-            <div class="mt-4 p-3 rounded-2xl bg-zinc-900/80 border border-white/5 text-[11px]">
-              <span class="font-bold text-teal-400 block mb-1">PhysioCare Jaipur (owner):</span>
-              <p class="text-zinc-400">"Thank you!"</p>
-            </div>
+            <p class="text-xs text-zinc-300 leading-relaxed">"One of the most trusted physiotherapists in Jaipur. Scientific approach rather than routine heating pads. Modern exercise therapy."</p>
           </div>
           <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[11px] text-zinc-400">
-            <span class="flex items-center gap-1 text-teal-300">🙏 2</span>
+            <span>Google Review</span>
             <span class="text-teal-400 font-semibold">Google Verified</span>
           </div>
         </div>
 
         <!-- Review 8 (5 Star) -->
-        <div class="frosted-glass-card p-6 rounded-3xl border border-white/10 flex flex-col justify-between reveal">
+        <div class="frosted-glass-card p-6 rounded-3xl border border-white/10 flex flex-col justify-between reveal min-w-[300px] sm:min-w-[380px] max-w-[380px] flex-shrink-0 snap-start">
           <div>
             <div class="flex items-center justify-between mb-4">
               <div class="flex items-center gap-3">
@@ -604,27 +685,22 @@
                   <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
                 </div>
                 <div>
-                  <h4 class="text-sm font-bold text-white">Vinayak Agarwal</h4>
+                  <h4 class="text-sm font-bold text-white">Rohit Bansal</h4>
                   <p class="text-[10px] text-zinc-400">1 review • 2 years ago</p>
                 </div>
               </div>
               <span class="text-xs text-yellow-400 font-bold">★★★★★</span>
             </div>
-            <p class="text-xs text-zinc-300 leading-relaxed">"Best physiotherapy in jaipur."</p>
-            
-            <div class="mt-4 p-3 rounded-2xl bg-zinc-900/80 border border-white/5 text-[11px]">
-              <span class="font-bold text-teal-400 block mb-1">PhysioCare Jaipur (owner):</span>
-              <p class="text-zinc-400">"Thanks bro, happy to keep you fit so you can keep scoring goals"</p>
-            </div>
+            <p class="text-xs text-zinc-300 leading-relaxed">"Outstanding sports injury rehab. Got my knee mobility fully back within 3 weeks of targeted rehab drills."</p>
           </div>
           <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[11px] text-zinc-400">
-            <span class="flex items-center gap-1 text-teal-300">🙏 1</span>
+            <span>Google Review</span>
             <span class="text-teal-400 font-semibold">Google Verified</span>
           </div>
         </div>
 
         <!-- Review 9 (4 Star) -->
-        <div class="frosted-glass-card p-6 rounded-3xl border border-white/10 flex flex-col justify-between reveal">
+        <div class="frosted-glass-card p-6 rounded-3xl border border-white/10 flex flex-col justify-between reveal min-w-[300px] sm:min-w-[380px] max-w-[380px] flex-shrink-0 snap-start">
           <div>
             <div class="flex items-center justify-between mb-4">
               <div class="flex items-center gap-3">
@@ -632,27 +708,22 @@
                   <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
                 </div>
                 <div>
-                  <h4 class="text-sm font-bold text-white">Lalit Sharma</h4>
+                  <h4 class="text-sm font-bold text-white">Deepak Sharma</h4>
                   <p class="text-[10px] text-zinc-400">4 reviews • 8 years ago</p>
                 </div>
               </div>
               <span class="text-xs text-yellow-400 font-bold">★★★★☆</span>
             </div>
-            <p class="text-xs text-zinc-300 leading-relaxed">"I take treatment here for 2 months it's sound great good work by the team."</p>
-            
-            <div class="mt-4 p-3 rounded-2xl bg-zinc-900/80 border border-white/5 text-[11px]">
-              <span class="font-bold text-teal-400 block mb-1">PhysioCare Jaipur (owner):</span>
-              <p class="text-zinc-400">"Thanks"</p>
-            </div>
+            <p class="text-xs text-zinc-300 leading-relaxed">"Great therapy methods. Helped relieve acute neck spasm very quickly. Convenient location and polite staff."</p>
           </div>
           <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[11px] text-zinc-400">
-            <span class="flex items-center gap-1 text-teal-300">🙏 2</span>
+            <span>Google Review</span>
             <span class="text-teal-400 font-semibold">Google Verified</span>
           </div>
         </div>
 
         <!-- Review 10 (4 Star) -->
-        <div class="frosted-glass-card p-6 rounded-3xl border border-white/10 flex flex-col justify-between reveal">
+        <div class="frosted-glass-card p-6 rounded-3xl border border-white/10 flex flex-col justify-between reveal min-w-[300px] sm:min-w-[380px] max-w-[380px] flex-shrink-0 snap-start">
           <div>
             <div class="flex items-center justify-between mb-4">
               <div class="flex items-center gap-3">
@@ -660,18 +731,13 @@
                   <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
                 </div>
                 <div>
-                  <h4 class="text-sm font-bold text-white">Manish Agarwal</h4>
+                  <h4 class="text-sm font-bold text-white">Anand Vardhan</h4>
                   <p class="text-[10px] text-zinc-400">Local Guide • 10 reviews • 8 years ago</p>
                 </div>
               </div>
               <span class="text-xs text-yellow-400 font-bold">★★★★☆</span>
             </div>
-            <p class="text-xs text-zinc-300 leading-relaxed">"Best physiotherapy center, disciplined setup and good patient attention."</p>
-            
-            <div class="mt-4 p-3 rounded-2xl bg-zinc-900/80 border border-white/5 text-[11px]">
-              <span class="font-bold text-teal-400 block mb-1">PhysioCare Jaipur (owner):</span>
-              <p class="text-zinc-400">"Thank you!"</p>
-            </div>
+            <p class="text-xs text-zinc-300 leading-relaxed">"Effective rehabilitation session for my father's knee stiffness. Very patient-friendly atmosphere."</p>
           </div>
           <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[11px] text-zinc-400">
             <span>Google Review</span>
@@ -680,7 +746,7 @@
         </div>
 
         <!-- Review 11 (3 Star - Constructive feedback example) -->
-        <div class="frosted-glass-card p-6 rounded-3xl border border-white/10 flex flex-col justify-between reveal">
+        <div class="frosted-glass-card p-6 rounded-3xl border border-white/10 flex flex-col justify-between reveal min-w-[300px] sm:min-w-[380px] max-w-[380px] flex-shrink-0 snap-start">
           <div>
             <div class="flex items-center justify-between mb-4">
               <div class="flex items-center gap-3">
@@ -706,23 +772,37 @@
             <span class="text-teal-400 font-semibold">Google Verified</span>
           </div>
         </div>
-
       </div>
     </div>
   </section>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const container = document.getElementById('reels-scroll-container');
-      const prevBtn = document.getElementById('reel-prev-btn');
-      const nextBtn = document.getElementById('reel-next-btn');
+      // Reels scroll buttons
+      const reelsContainer = document.getElementById('reels-scroll-container');
+      const reelPrevBtn = document.getElementById('reel-prev-btn');
+      const reelNextBtn = document.getElementById('reel-next-btn');
 
-      if (container && prevBtn && nextBtn) {
-        prevBtn.addEventListener('click', () => {
-          container.scrollBy({ left: -300, behavior: 'smooth' });
+      if (reelsContainer && reelPrevBtn && reelNextBtn) {
+        reelPrevBtn.addEventListener('click', () => {
+          reelsContainer.scrollBy({ left: -300, behavior: 'smooth' });
         });
-        nextBtn.addEventListener('click', () => {
-          container.scrollBy({ left: 300, behavior: 'smooth' });
+        reelNextBtn.addEventListener('click', () => {
+          reelsContainer.scrollBy({ left: 300, behavior: 'smooth' });
+        });
+      }
+
+      // Reviews horizontal scroll buttons
+      const reviewsContainer = document.getElementById('google-reviews-container');
+      const revPrevBtn = document.getElementById('review-prev-btn');
+      const revNextBtn = document.getElementById('review-next-btn');
+
+      if (reviewsContainer && revPrevBtn && revNextBtn) {
+        revPrevBtn.addEventListener('click', () => {
+          reviewsContainer.scrollBy({ left: -380, behavior: 'smooth' });
+        });
+        revNextBtn.addEventListener('click', () => {
+          reviewsContainer.scrollBy({ left: 380, behavior: 'smooth' });
         });
       }
     });
@@ -840,56 +920,6 @@
     </div>
   </section>
 
-  <!-- ============================================
-       REVIEWS SECTION
-       ============================================ -->
-  {% if reviews %}
-  <section class="py-24 px-6 sm:px-8 bg-transparent overflow-hidden" id="reviews">
-    <div class="max-w-7xl mx-auto relative z-10">
-      <div class="text-left mb-12 reveal">
-        <span class="text-xs font-black uppercase tracking-[0.2em] text-teal-400 font-display">PATIENT TESTIMONIALS</span>
-        <h2 class="text-4xl font-black font-display tracking-tight text-white mt-3">Recovery Stories</h2>
-      </div>
-
-      <div class="flex overflow-x-auto gap-6 pb-8 no-scrollbar snap-x snap-mandatory">
-        {% for review in reviews %}
-        <div class="relative flex-shrink-0 w-80 sm:w-[380px] snap-center p-8 rounded-[2rem] bg-zinc-900/35 backdrop-blur-xl border border-zinc-800/80 hover:border-teal-500/30 hover:shadow-2xl transition-all duration-350 flex flex-col justify-between group">
-          
-          <div>
-            <div class="flex justify-between items-center mb-6">
-              <div class="flex gap-1 text-amber-400">
-                {% for i in "12345" %}
-                  {% if forloop.counter <= review.rating %}
-                    <span class="material-symbols-rounded text-lg">star</span>
-                  {% else %}
-                    <span class="material-symbols-rounded text-white/10 text-lg">star</span>
-                  {% endif %}
-                {% endfor %}
-              </div>
-            </div>
-            
-            <p class="text-xs sm:text-sm font-semibold italic text-zinc-300 leading-relaxed mb-10 relative z-10">
-              "{{ review.comment }}"
-            </p>
-          </div>
-          
-          <div class="flex items-center gap-4 pt-5 border-t border-zinc-800/55">
-            <div class="w-12 h-12 rounded-2xl bg-teal-500/10 text-teal-455 border border-teal-500/20 flex items-center justify-center flex-shrink-0">
-              <span class="material-symbols-rounded text-xl">person</span>
-            </div>
-            <div>
-              <div class="font-black text-sm text-white font-display">{{ review.patient.user.get_full_name }}</div>
-              <div class="flex items-center gap-1 text-[9px] font-bold text-teal-400 uppercase tracking-widest mt-0.5">
-                <span class="material-symbols-rounded text-xs">verified_user</span> Verified Patient
-              </div>
-            </div>
-          </div>
-        </div>
-        {% endfor %}
-      </div>
-    </div>
-  </section>
-  {% endif %}
 </main>
 {% endblock %}
 

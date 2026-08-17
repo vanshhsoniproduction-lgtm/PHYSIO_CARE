@@ -94,30 +94,40 @@
       const scrollY = window.scrollY || window.pageYOffset || 0;
       const scrollPercent = Math.max(0, Math.min(1, scrollY / scrollHeight));
 
-      // 1. Cards Container & Dots Visibility (fades out at 80% scroll)
-      if (scrollPercent >= 0.80) {
-        // Fade out cards container
-        cardsContainer.classList.remove('opacity-100', 'scale-100');
-        cardsContainer.classList.add('opacity-0', 'scale-95');
+      // Active zone for service cards: 0% to 72% scroll
+      const CARD_CYCLE_END = 0.72;
+      const EXIT_ZONE_START = 0.75;
+
+      if (scrollPercent >= EXIT_ZONE_START) {
+        // Fade & slide out cards container cleanly before footer comes up
+        cardsContainer.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
+        cardsContainer.classList.add('opacity-0', 'scale-90', 'pointer-events-none');
         
         // Fade out dots container
         dotsContainer.classList.remove('opacity-100');
         dotsContainer.classList.add('opacity-0', 'pointer-events-none');
 
-        // Reset all card classes to off-screen left (so they slide left when disappearing)
+        // Reset all card classes to off-screen left (so they stay hidden)
         cards.forEach((card) => {
           card.classList.remove('opacity-100', 'translate-x-0', 'translate-x-[120%]', 'pointer-events-auto');
           card.classList.add('opacity-0', '-translate-x-[120%]', 'pointer-events-none');
         });
+
+        // Also fade out header cleanly
+        header.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
+        header.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
       } else {
-        cardsContainer.classList.remove('opacity-0', 'scale-95');
+        cardsContainer.classList.remove('opacity-0', 'scale-90', 'pointer-events-none');
         cardsContainer.classList.add('opacity-100', 'scale-100');
         
         dotsContainer.classList.remove('opacity-0', 'pointer-events-none');
         dotsContainer.classList.add('opacity-100');
 
+        header.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+        header.classList.add('opacity-100', 'scale-100', 'pointer-events-auto');
+
         const zones = {{ services.items|length }};
-        let activeIndex = Math.floor((scrollPercent / 0.80) * zones);
+        let activeIndex = Math.floor((scrollPercent / CARD_CYCLE_END) * zones);
         if (activeIndex >= zones) activeIndex = zones - 1;
 
         cards.forEach((card, index) => {
@@ -142,15 +152,6 @@
             dot.classList.add('bg-white/20', 'w-2');
           }
         });
-      }
-
-      // 2. Header Visibility (fades out at 92% scroll)
-      if (scrollPercent >= 0.92) {
-        header.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
-        header.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
-      } else {
-        header.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
-        header.classList.add('opacity-100', 'scale-100', 'pointer-events-auto');
       }
     }
 
